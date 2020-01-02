@@ -2,17 +2,25 @@
 Unit testing for CommandLineParsing.py (i.e. command line parsing logic)
 """
 
+
 import unittest
 from src.CommandLineParsing import create_parser
+
 
 class CommandLineParsingTests(unittest.TestCase):
     def setUp(self):
         self.parser = create_parser()
 
     def test_no_args_provided(self):
+        """
+        Test case for when no arguments are supplied.
+        """
         self.assertRaises(SystemExit, self.parser.parse_args, [])
 
     def test_one_arg_provided(self):
+        """
+        Test case for when only one argument is supplied.
+        """
         self.assertRaises(SystemExit, self.parser.parse_args, ["127.0.0.1"])
 
     def test_only_required_args_given(self):
