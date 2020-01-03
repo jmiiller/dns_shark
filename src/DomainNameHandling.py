@@ -71,10 +71,13 @@ class DomainNameDecoder:
 
         :return: None
         """
-        label_length: int = int.from_bytes(reader.read(1), 'big')
+        label_length: bytes = reader.read(1)
 
-        if label_length != 0:
-            DomainNameDecoder._decode_label(reader, copy_of_data, string_builder, label_length)
+        if label_length != b'\x00':
+            if DomainNameDecoder.is_pointer(label_length):
+                pass #todo add handling for pointers in domain name encodings
+            else:
+                DomainNameDecoder._decode_label(reader, copy_of_data, string_builder, int.from_bytes(label_length, 'big'))
 
     @staticmethod
     def _decode_label(reader: BytesIO, copy_of_data: BytesIO, string_builder: StringIO, label_length: int) -> None:
@@ -92,3 +95,14 @@ class DomainNameDecoder:
             string_builder.write(char)
 
         DomainNameDecoder._decode_domain_name_helper(reader, copy_of_data, string_builder)
+
+    @staticmethod
+    def is_pointer(label_length: bytes) -> bool:
+        """
+        Returns true if the label_length byte is a pointer.
+        :param label_length: The label_length byte from a dns encoded domain name
+        :return: true if pointer, false otherwise
+        """
+        a, b = label_length, b'\xc0'
+        return bytes(a[0] & b[0]) == b'\xc0'
+
