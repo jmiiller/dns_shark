@@ -99,6 +99,14 @@ class DomainNameDecoder:
 
     @staticmethod
     def _decode_pointer(pointer: int, copy_of_data: BytesIO, string_builder: StringIO):
+        """
+        Decodes a pointer in a domain name.
+
+        :param pointer: the pointer value
+        :param copy_of_data: a copy of the entire dns message, used for handling pointers in domain names.
+        :param string_builder: the currently decoded domain name string
+        :return:
+        """
         new_data = BytesIO(copy_of_data.getvalue())
         new_data.seek(pointer)  # set the new data to point to the pointer specified location
         DomainNameDecoder._decode_domain_name_helper(new_data, copy_of_data, string_builder)
@@ -116,6 +124,12 @@ class DomainNameDecoder:
 
     @staticmethod
     def _get_last_six_bits_of_pointer(label_length: bytes) -> bytes:
+        """
+        Retrieves the last six bits of the label_length bytes, to be used in decoding the pointer.
+
+        :param label_length: the label_length bytes that contain the pointer.
+        :return: the last six bits of the label_length bytes
+        """
         bitmask: int = int.from_bytes(b'\x3f', 'big')
         label_length_as_int: int = int.from_bytes(label_length, 'big')
         return (label_length_as_int & bitmask).to_bytes(1, 'big')
