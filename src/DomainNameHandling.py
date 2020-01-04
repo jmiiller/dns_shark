@@ -5,7 +5,6 @@ DNS data compression algorithm.
 
 from typing import List
 from io import StringIO, BytesIO
-import struct
 
 
 class DomainNameEncoder:
@@ -74,7 +73,7 @@ class DomainNameDecoder:
 
         if label_length != b'\x00':
             if DomainNameDecoder._is_pointer(label_length):
-                pointer: int = int.from_bytes(DomainNameDecoder._get_first_six_bits_of_pointer(label_length), 'big')
+                pointer: int = int.from_bytes(DomainNameDecoder._get_last_six_bits_of_pointer(label_length), 'big')
                 pointer = pointer << 8
                 pointer = pointer + int.from_bytes(reader.read(1), 'big')
                 DomainNameDecoder._decode_pointer(pointer, copy_of_data, string_builder)
@@ -116,7 +115,7 @@ class DomainNameDecoder:
         return (label_length_as_int & bitmask) == bitmask
 
     @staticmethod
-    def _get_first_six_bits_of_pointer(label_length: bytes) -> bytes:
+    def _get_last_six_bits_of_pointer(label_length: bytes) -> bytes:
         bitmask: int = int.from_bytes(b'\x3f', 'big')
         label_length_as_int: int = int.from_bytes(label_length, 'big')
         return (label_length_as_int & bitmask).to_bytes(1, 'big')
