@@ -132,7 +132,7 @@ class DNSMessage():
     def get_authoritative(self) -> bool:
         return self.authoritative
 
-    def print_dns_question(self, dns_server_ip: str) -> None
+    def print_dns_question(self, dns_server_ip: str) -> None:
         """
         Print a dns question/query to stdout.
         :param dns_server_ip: ip address of the dns server the domain name resolution request was sent to.
