@@ -50,7 +50,7 @@ class DomainNameDecoder:
     """
 
     @staticmethod
-    def decode_domain_name(reader: BytesIO, copy_of_data: BytesIO) -> str:
+    def decode_domain_name(data: BytesIO, copy_of_data: BytesIO) -> str:
         """
         Decode the domain name that was provided when the object was initially created.
 
@@ -58,30 +58,30 @@ class DomainNameDecoder:
         """
         string_builder: StringIO = StringIO()
 
-        DomainNameDecoder._decode_domain_name_helper(reader, copy_of_data, string_builder)
+        DomainNameDecoder._decode_domain_name_helper(data, copy_of_data, string_builder)
 
         return string_builder.getvalue()[1:]  # we remove the first char, since it is an extra '.'.
 
     @staticmethod
-    def _decode_domain_name_helper(reader: BytesIO, copy_of_data: BytesIO, string_builder: StringIO) -> None:
+    def _decode_domain_name_helper(data: BytesIO, copy_of_data: BytesIO, string_builder: StringIO) -> None:
         """
         Helper function to decode domain names. (Used to allow for a mutually recursive solution).
 
         :return: None
         """
-        label_length: bytes = reader.read(1)
+        label_length: bytes = data.read(1)
 
         if label_length != b'\x00':
             if DomainNameDecoder._is_pointer(label_length):
                 pointer: int = int.from_bytes(DomainNameDecoder._get_last_six_bits_of_pointer(label_length), 'big')
                 pointer = pointer << 8
-                pointer = pointer + int.from_bytes(reader.read(1), 'big')
+                pointer = pointer + int.from_bytes(data.read(1), 'big')
                 DomainNameDecoder._decode_pointer(pointer, copy_of_data, string_builder)
             else:
-                DomainNameDecoder._decode_label(reader, copy_of_data, string_builder, int.from_bytes(label_length, 'big'))
+                DomainNameDecoder._decode_label(data, copy_of_data, string_builder, int.from_bytes(label_length, 'big'))
 
     @staticmethod
-    def _decode_label(reader: BytesIO, copy_of_data: BytesIO, string_builder: StringIO, label_length: int) -> None:
+    def _decode_label(data: BytesIO, copy_of_data: BytesIO, string_builder: StringIO, label_length: int) -> None:
         """
         Decodes a single label of a encoded domain name.
 
@@ -92,16 +92,16 @@ class DomainNameDecoder:
         string_builder.write('.')
 
         for _ in range(label_length):
-            char: str = reader.read(1).decode('ascii')
+            char: str = data.read(1).decode('ascii')
             string_builder.write(char)
 
-        DomainNameDecoder._decode_domain_name_helper(reader, copy_of_data, string_builder)
+        DomainNameDecoder._decode_domain_name_helper(data, copy_of_data, string_builder)
 
     @staticmethod
     def _decode_pointer(pointer: int, copy_of_data: BytesIO, string_builder: StringIO):
-        new_reader = BytesIO(copy_of_data.getvalue())
-        new_reader.seek(pointer)  # set the new reader to point to the pointer specified location
-        DomainNameDecoder._decode_domain_name_helper(new_reader, copy_of_data, string_builder)
+        new_data = BytesIO(copy_of_data.getvalue())
+        new_data.seek(pointer)  # set the new data to point to the pointer specified location
+        DomainNameDecoder._decode_domain_name_helper(new_data, copy_of_data, string_builder)
 
     @staticmethod
     def _is_pointer(label_length: bytes) -> bool:
