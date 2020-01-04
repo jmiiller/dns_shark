@@ -2,6 +2,7 @@ from src.DomainNameHandling import DomainNameDecoder
 from io import BytesIO
 from socket import inet_ntop, AF_INET, AF_INET6
 
+
 class ResourceRecord():
     """
     Handles all logic pertaining to decoding and encoding Resource Records
@@ -34,3 +35,19 @@ class ResourceRecord():
     @staticmethod
     def _decode_ipv6_address(data: BytesIO) -> str:
         return inet_ntop(AF_INET6, data.read(16))
+
+    def print_record_for_trace(self):
+        print("      %-30s %-10d %-4s %s" % (self.name, self.ttl, ResourceRecord.parse_type(self.type), self.rdata))
+
+    @staticmethod
+    def parse_type(type: int) -> str:
+        if type == 1:
+            return 'A'
+        elif type == 2:
+            return 'NS'
+        elif type == 5:
+            return 'CN'
+        elif type == 28:
+            return 'AAAA'
+        else:
+            return str(type)

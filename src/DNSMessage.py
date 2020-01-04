@@ -77,8 +77,29 @@ class DNSMessage():
 
         return list_of_records
 
-    def get_is_response(self):
+    def get_is_response(self) -> bool:
         return self.is_response
 
-    def get_authoritative(self):
+    def get_authoritative(self) -> bool:
         return self.authoritative
+
+    def print_dns_question(self, dns_server_ip: str):
+        print('Query ID     ' + str(self.query_id) + ' ' + self.dns_questions[0].name + '  ' +
+              ResourceRecord.parse_type(self.dns_questions[0].type) + ' --> ' + dns_server_ip)
+
+    def print_message(self):
+        print('Response ID: ' + str(self.query_id) + ' Authoritative = ' + str(self.authoritative))
+
+        print('  Answers (' + str(self.answer_count) + ')')
+        DNSMessage.print_resource_records_trace(self.answer_records)
+
+        print('  Name Servers (' + str(self.nameserver_count) + ')')
+        DNSMessage.print_resource_records_trace(self.name_server_records)
+
+        print('  Additional Information (' + str(self.additional_count) + ')')
+        DNSMessage.print_resource_records_trace(self.additional_records)
+
+    @staticmethod
+    def print_resource_records_trace(records: List[ResourceRecord]):
+        for record in records:
+            record.print_record_for_trace()
