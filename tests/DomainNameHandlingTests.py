@@ -4,7 +4,7 @@ Unit testing for DomainNameHandling.py (i.e. domain name encoding/decoding logic
 
 
 import unittest
-from src.DomainNameHandling import DomainNameEncoder, DomainNameDecoder
+from src.DomainNameHandling import DomainNameEncoder, DomainNameDecoder  # type: ignore
 from io import BytesIO
 
 

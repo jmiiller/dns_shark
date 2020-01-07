@@ -1,6 +1,6 @@
 import unittest
-from src.DNSMessageUtilities import create_domain_name_query
-from src.DNSMessage import DNSMessage
+from src.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
+from src.DNSMessage import DNSMessage  # type: ignore
 from io import BytesIO
 
 

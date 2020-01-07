@@ -4,7 +4,7 @@ Unit testing for CommandLineParsing.py (i.e. command line parsing logic)
 
 
 import unittest
-from src.CommandLineParsing import create_parser
+from src.CommandLineParsing import create_parser  # type: ignore
 
 
 class CommandLineParsingTests(unittest.TestCase):

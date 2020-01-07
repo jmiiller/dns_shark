@@ -1,10 +1,10 @@
-from src.CommandLineParsing import create_parser
+from src.CommandLineParsing import create_parser  # type: ignore
 import sys
 import socket
 from argparse import ArgumentParser, Namespace
-from src.DNSMessageUtilities import create_domain_name_query
-from src.DNSMessage import DNSMessage
-from src.ResourceRecord import ResourceRecord
+from src.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
+from src.DNSMessage import DNSMessage  # type: ignore
+from src.ResourceRecord import ResourceRecord  # type: ignore
 from io import BytesIO
 from typing import List
 from random import randint

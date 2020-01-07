@@ -1,4 +1,4 @@
-from src.DomainNameHandling import DomainNameDecoder
+from src.DomainNameHandling import DomainNameDecoder    # type: ignore
 from io import BytesIO
 from socket import inet_ntop, AF_INET, AF_INET6
 
