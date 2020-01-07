@@ -1,6 +1,6 @@
-from src.DNSQuestion import DNSQuestion
-from src.ResourceRecord import ResourceRecord
 from typing import List
+from src.DNSQuestion import DNSQuestion  # type: ignore
+from src.ResourceRecord import ResourceRecord  # type: ignore
 from io import BytesIO
 
 

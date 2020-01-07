@@ -1,5 +1,5 @@
 from io import BytesIO
-from src.DomainNameHandling import DomainNameDecoder
+from src.DomainNameHandling import DomainNameDecoder  # type: ignore
 
 
 class DNSQuestion():

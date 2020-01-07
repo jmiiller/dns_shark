@@ -5,8 +5,8 @@ In particular, contains functionality to generate dns queries to request the res
 a specified domain name.
 """
 
-from src.DomainNameHandling import DomainNameEncoder
 from struct import pack
+from src.DomainNameHandling import DomainNameEncoder  # type: ignore
 from io import BytesIO
 
 
