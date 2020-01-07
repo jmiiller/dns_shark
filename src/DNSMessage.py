@@ -126,19 +126,13 @@ class DNSMessage():
 
         return list_of_records
 
-    def get_is_response(self) -> bool:
-        return self.is_response
-
-    def get_authoritative(self) -> bool:
-        return self.authoritative
-
     def print_dns_question(self, dns_server_ip: str) -> None:
         """
         Print a dns question/query to stdout.
         :param dns_server_ip: ip address of the dns server the domain name resolution request was sent to.
         :return: None
         """
-        print('Query ID     ' + str(self.query_id) + ' ' + self.dns_questions[0].name + '  ' +
+        print('Query ID:    ' + str(self.query_id) + ' ' + self.dns_questions[0].name + '  ' +
               ResourceRecord.parse_type(self.dns_questions[0].type) + ' --> ' + dns_server_ip)
 
     def print_message(self) -> None:
@@ -166,3 +160,24 @@ class DNSMessage():
         """
         for record in records:
             record.print_record_for_trace()
+
+    def get_resource_records_that_match_domain_name_and_type(self, domain_name: str, type: int):
+        results = []
+
+        for record in self.answer_records:
+            if record.name.lower() == domain_name.lower() and record.type == type:
+                results.append(record)
+
+        return results
+
+    def get_name_server_ip_address(self):
+        for name_server_record in self.name_server_records:
+            name_server_ip: str = self.get_name_server_ip_address_from_matching_additional_record(name_server_record)
+
+            if name_server_ip:
+                return name_server_ip
+
+    def get_name_server_ip_address_from_matching_additional_record(self, name_server_record: ResourceRecord) -> str:
+        for additional_record in self.additional_records:
+            if additional_record.name.lower() == name_server_record.rdata.lower() and additional_record.type == 1:
+                return additional_record.rdata

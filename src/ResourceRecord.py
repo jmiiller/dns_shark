@@ -3,7 +3,7 @@ from io import BytesIO
 from socket import inet_ntop, AF_INET, AF_INET6
 
 
-class ResourceRecord():
+class ResourceRecord:
     """
     Handles all logic pertaining to decoding and encoding Resource Records.
     """
@@ -60,6 +60,9 @@ class ResourceRecord():
         Print a trace of the resource record.
         """
         print("      %-30s %-10d %-4s %s" % (self.name, self.ttl, ResourceRecord.parse_type(self.type), self.rdata))
+
+    def print_record_with_supplied_domain_name(self, domain_name: str):
+        print("  %s %d   %s %s" % (domain_name, self.ttl, ResourceRecord.parse_type(self.type), self.rdata))
 
     @staticmethod
     def parse_type(type: int) -> str:
