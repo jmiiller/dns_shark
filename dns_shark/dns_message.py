@@ -1,5 +1,5 @@
 from dns_shark.dns_question import DNSQuestion
-from dns_shark.ResourceRecord import ResourceRecord  
+from dns_shark.resource_record import ResourceRecord
 from typing import List, Optional
 from io import BytesIO
 

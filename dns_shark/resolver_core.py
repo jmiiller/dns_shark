@@ -1,6 +1,6 @@
 from dns_shark.dns_message_utilities import DNSMessageUtilities
 from dns_shark.dns_message import DNSMessage
-from dns_shark.ResourceRecord import ResourceRecord
+from dns_shark.resource_record import ResourceRecord
 from io import BytesIO
 from typing import List, Optional
 from random import randint
