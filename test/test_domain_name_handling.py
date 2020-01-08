@@ -22,7 +22,7 @@ class DomainNameHandlingTests(unittest.TestCase):
         cls.domain_name_with_pointers: str = "www.cbu.cs.ubc.ca"
         # This encoding has two domain names in it. At the start is www.cs.ubc.ca. After is www.cbu.cs.ubc.ca,
         # which contains a pointer to the first one.
-        cls.domain_name_with_pointers_encoded = b'\x03www\x02cs\x03ubc\x02ca\x00\x03\x77\x77\x77\x03\x63\x62\x75\xc0\x04'
+        cls.domain_name_with_pointers_encoded: bytes = b'\x03www\x02cs\x03ubc\x02ca\x00\x03\x77\x77\x77\x03\x63\x62\x75\xc0\x04'
 
     def test_encode_simple_domain_name(self):
         """
