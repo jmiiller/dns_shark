@@ -14,7 +14,7 @@ import socket
 from argparse import ArgumentParser, Namespace
 from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
 from typing import List
-from dns_shark.Resolver import Resolver  # type: ignore
+from dns_shark.resolver import Resolver  # type: ignore
 
 
 def main():
