@@ -2,7 +2,7 @@ from io import BytesIO
 from src.DomainNameHandling import DomainNameDecoder  # type: ignore
 
 
-class DNSQuestion():
+class DNSQuestion:
     """
     Handles all logic pertaining to decoding and encoding DNS Questions
     """
