@@ -1,8 +1,8 @@
 import unittest
 from io import BytesIO
-from dns_shark.DNSMessage import DNSMessage  # type: ignore
-from dns_shark.DNSQuestion import DNSQuestion  # type: ignore
-from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
+from dns_shark.DNSMessage import DNSMessage  
+from dns_shark.DNSQuestion import DNSQuestion  
+from dns_shark.ResourceRecord import ResourceRecord  
 
 
 class DNSMessageTests(unittest.TestCase):

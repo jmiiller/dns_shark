@@ -1,6 +1,6 @@
 import unittest
-from dns_shark.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
-from dns_shark.DNSMessage import DNSMessage  # type: ignore
+from dns_shark.DNSMessageUtilities import DNSMessageUtilities  
+from dns_shark.DNSMessage import DNSMessage  
 from io import BytesIO
 
 

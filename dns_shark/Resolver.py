@@ -1,10 +1,10 @@
-from dns_shark.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
-from dns_shark.DNSMessage import DNSMessage  # type: ignore
-from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
+from dns_shark.DNSMessageUtilities import DNSMessageUtilities
+from dns_shark.DNSMessage import DNSMessage
+from dns_shark.ResourceRecord import ResourceRecord
 from io import BytesIO
-from typing import List
+from typing import List, Optional
 from random import randint
-from dns_shark.ErrorMessages import ErrorMessages  # type: ignore
+from dns_shark.ErrorMessages import ErrorMessages
 
 
 class Resolver:
@@ -92,7 +92,7 @@ class Resolver:
         :param requested_type: the type of address we wish to resolve the domain name to.
         :return: a list of the answer records that match the desired domain name and type, if present.
         """
-        name_server_ip: str = dns_response.get_name_server_ip_address()
+        name_server_ip: Optional[str] = dns_response.get_name_server_ip_address()
 
         if name_server_ip:  # Response contains an address for one of the name servers, send packet to that server.
             return self.resolve_domain_name(requested_domain_name, name_server_ip, requested_type)
@@ -148,8 +148,8 @@ class Resolver:
 
         if (received_dns_message.query_id != expected_query_id) or not received_dns_message.is_response:
             self._receive_dns_message(expected_query_id)
-        else:
-            return received_dns_message
+
+        return received_dns_message
 
     def _handle_tracing_for_dns_response(self, dns_response: DNSMessage) -> None:
         """
