@@ -1,6 +1,6 @@
 import unittest
 from io import BytesIO
-from dns_shark.DNSMessage import DNSMessage  
+from dns_shark.dns_message import DNSMessage
 from dns_shark.DNSQuestion import DNSQuestion  
 from dns_shark.ResourceRecord import ResourceRecord  
 
