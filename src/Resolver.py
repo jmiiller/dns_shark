@@ -1,21 +1,11 @@
-from src.CommandLineParsing import create_parser  # type: ignore
-import sys
-import socket
-from argparse import ArgumentParser, Namespace
 from src.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
 from src.DNSMessage import DNSMessage  # type: ignore
 from src.ResourceRecord import ResourceRecord  # type: ignore
 from io import BytesIO
-from typing import List
+from typing import List, Union, NoReturn
 from random import randint
-from src.ErrorMessages import ErrorMessages
+from src.ErrorMessages import ErrorMessages  # type: ignore
 
-#Todo
-# - break up resolve_domain_name into nice, digestible methods that make the method easier to modify and understand.
-# - add docstrings to resolver.py
-# - add timeout
-# - make into a python package and publish to pip
-# - write tests to get complete test coverage
 
 class Resolver:
     """
@@ -28,71 +18,131 @@ class Resolver:
         self.starting_dns_server: str = starting_dns_server
         self.counter: int = 30  # Maximum number of requests allowed for name resolution. Used to avoid infinite loops.
 
-    def resolve_domain_name(self,
-                            requested_domain_name: str,
-                            queried_dns_server_ip: str,
-                            requested_type: int):
+    def resolve_domain_name(self, requested_domain_name: str,
+                            next_dns_server_ip: str,
+                            requested_type: int) -> List[ResourceRecord]:
+        """
+        Resolves a requested domain name of the requested type. Begins the name resolution process via sending a dns
+        query to the next_dns_server_ip.
 
-        if self.counter == 0:
-            ErrorMessages.print_zero_counter_error()
+        :param requested_domain_name: the domain name we wish to resolve.
+        :param next_dns_server_ip: the starting dns server which we use in the name resolution process.
+        :param requested_type: the desired resource record type we seek to resolve the domain name to.
+        :return: a list of the answer records that match the desired domain name and type, if present.
+        """
 
-        dns_response: DNSMessage = self._request_domain_name(requested_domain_name, queried_dns_server_ip, requested_type)
+        self.check_counter()
 
-        if dns_response.rcode != 0:
-            ErrorMessages.print_rcode_error_message(dns_response.rcode)
+        dns_response: DNSMessage = self._request_domain_name(requested_domain_name, next_dns_server_ip, requested_type)
 
+        Resolver.check_rcode(dns_response.rcode)
         self._handle_tracing_for_dns_response(dns_response)
 
         if dns_response.authoritative:
             # If the response is from a DNS server that is authoritative,
             # it will either have a CNAME or A entry for the fqdn.
-            answer_resource_records = dns_response.get_answer_records_that_match_domain_name_and_type(requested_domain_name, requested_type)
-            cname_resource_records = dns_response.get_answer_records_that_match_domain_name_and_type(requested_domain_name, 5)
+            return self._handle_authoritative_response(dns_response, requested_domain_name, requested_type)
 
-            if answer_resource_records:
-                return answer_resource_records
+        else:
+            # not an authoritative response. Therefore, look for a name server to send the next request to.
+            return self._handle_non_authoritative_response(dns_response, requested_domain_name, requested_type)
 
-            elif cname_resource_records:
-                cname_domain_name: str = cname_resource_records[0].rdata
-                return self.resolve_domain_name(cname_domain_name, self.starting_dns_server, requested_type)
+    def _handle_authoritative_response(self, dns_response: DNSMessage,
+                                       requested_domain_name: str,
+                                       requested_type: int) -> List[ResourceRecord]:
+        """
+        If an authoritative response is received from the domain name server, then first look for any matching
+        answer records. If there is one or more answer records, return them.
 
-            else:
-                ErrorMessages.print_no_matching_ip_address_error()
+        If there are no such records, then find a cname record and resolve the domain using its cname value.
 
-        else:  # not an authoritative response. Therefore, look for a name server to send the next request to.
-            name_server_ip: str = dns_response.get_name_server_ip_address()
+        :param dns_response: the most recently received dns response in the name resolution process.
+        :param requested_domain_name: the domain name we wish to resolve.
+        :param requested_type: the type of address we wish to resolve the domain name to.
+        :return: a list of the answer records that match the desired domain name and type, if present.
+        """
 
-            if name_server_ip: # Response contains an address for one of the name servers, send packet to that server.
-                return self.resolve_domain_name(requested_domain_name, name_server_ip, requested_type)
+        answer_resource_records = dns_response.get_answer_records_that_match_domain_name_and_type(requested_domain_name, requested_type)
+        cname_resource_records = dns_response.get_answer_records_that_match_domain_name_and_type(requested_domain_name, 5)
 
-            else:
-                # Name server ip address could not be found. Thus, resolve the name server domain name. When found,
-                # use the resolved ip address to continue search for originally desired domain name.
-                name_server_records: List[ResourceRecord] = self.resolve_domain_name(dns_response.name_server_records[0].rdata,
-                                                                                     self.starting_dns_server, 1)
-                name_server_ip = name_server_records[0].rdata
-                return self.resolve_domain_name(domain_name, name_server_ip, requested_type)
+        if answer_resource_records:
+            return answer_resource_records
+
+        elif cname_resource_records:
+            cname_domain_name: str = cname_resource_records[0].rdata
+            return self.resolve_domain_name(cname_domain_name, self.starting_dns_server, requested_type)
+
+        else:
+            ErrorMessages.print_no_matching_ip_address_error()
+            return []  # included to make MyPy happy
+
+    def _handle_non_authoritative_response(self, dns_response: DNSMessage,
+                                                 requested_domain_name: str,
+                                                 requested_type: int) -> List[ResourceRecord]:
+        """
+        Attempts to find a name server address to send the next name resolution request to.
+
+        If the name server ip is included in the additional resource records, then use it for next dns query.
+
+        If name server ip is not present, first resolve the name server domain name to an ipv4 address and send the
+        next dns query there.
+
+        :param dns_response: the most recently received dns response in the name resolution process.
+        :param requested_domain_name: the domain name we wish to resolve.
+        :param requested_type: the type of address we wish to resolve the domain name to.
+        :return: a list of the answer records that match the desired domain name and type, if present.
+        """
+        name_server_ip: str = dns_response.get_name_server_ip_address()
+
+        if name_server_ip:  # Response contains an address for one of the name servers, send packet to that server.
+            return self.resolve_domain_name(requested_domain_name, name_server_ip, requested_type)
+
+        else:
+            # Name server ip address could not be found. Thus, resolve the name server domain name. When found,
+            # use the resolved ip address to continue search for originally desired domain name.
+            name_server_records: List[ResourceRecord] = self.resolve_domain_name(dns_response.name_server_records[0].rdata,
+                                                                                 self.starting_dns_server, 1)
+            name_server_ip = name_server_records[0].rdata
+            return self.resolve_domain_name(requested_domain_name, name_server_ip, requested_type)
 
     def _request_domain_name(self,
                              requested_domain_name: str,
-                             queried_dns_server_ip: str,
-                             requested_type: int):
-        #start_time =
+                             next_dns_server_ip: str,
+                             requested_type: int) -> DNSMessage:
+        """
+        Creates a dns query to send to the starting_dns_server resource records pertaining to the requested_domain_name
+        of the requested_type.
+
+        Decrements the resolver counter by 1, since we sent a dns query.
+
+        :param requested_domain_name: the domain name we wish to resolve.
+        :param next_dns_server_ip: the dns server we wish to send the next dns query to.
+        :param requested_type: the type of address we wish to resolve the domain name to.
+        :return: the dns response from the next_dns_server_ip.
+        """
         random_query_id: int = randint(0, 65535)
 
         domain_name_query: BytesIO = DNSMessageUtilities.create_domain_name_query(requested_domain_name,
                                                                                   random_query_id,
                                                                                   requested_type)
-        self.udp_socket.sendto(domain_name_query.getvalue(), (queried_dns_server_ip, 53))
+        self.udp_socket.sendto(domain_name_query.getvalue(), (next_dns_server_ip, 53))
 
         self.counter = self.counter - 1 # decrement the counter by one, since we have just sent a request
-
-        Resolver._handle_tracing_for_dns_query(domain_name_query, queried_dns_server_ip, self.verbose)
+        self._handle_tracing_for_dns_query(domain_name_query, next_dns_server_ip)
 
         return self._receive_dns_message(random_query_id)
 
-    def _receive_dns_message(self, expected_query_id: int):
-        #handle_timeout_error()
+    def _receive_dns_message(self, expected_query_id: int) -> DNSMessage:
+        """
+        Receives and decodes a dns message from a dns server.
+
+        If the received dns message does not have the expected query_id or is not a response, then simply wait for the
+        next message received.
+
+        :param expected_query_id: the query id we expect the incoming dns response to possess.
+        :return: the dns response that has been received, successfully decoded, and has the correct query_id and is_
+        response value.
+        """
         received_data = self.udp_socket.recv(1024)
         received_dns_message: DNSMessage = DNSMessage(BytesIO(received_data))
 
@@ -101,47 +151,63 @@ class Resolver:
         else:
             return received_dns_message
 
-    def _handle_tracing_for_dns_response(self, dns_message: DNSMessage):
-        if self.verbose:
-            dns_message.print_dns_response()
+    def _handle_tracing_for_dns_response(self, dns_response: DNSMessage) -> None:
+        """
+        If the resolver is set to verbose, then print tracing information for the dns response.
 
-    @staticmethod
-    def _handle_tracing_for_dns_query(domain_name_query: BytesIO, queried_dns_server_ip: str, verbose: bool):
-        if verbose:
+        :param dns_response: the dns response we wish to provide tracing information of.
+        :return: None.
+        """
+        if self.verbose:
+            dns_response.print_dns_response()
+
+    def _handle_tracing_for_dns_query(self, domain_name_query: BytesIO, next_dns_server_ip: str) -> None:
+        """
+        If the resolver is set to verbose, then print tracing information for the dns query.
+
+        :param domain_name_query: the domain name query that is sent to the next_dns_server_ip.
+        :param next_dns_server_ip: the dns server we send the domain name query to.
+        :return: None
+        """
+        if self.verbose:
             print('')
             print('')
             domain_name_query.seek(0)  # need to ensure we are at the start of the writer
                                        # to be able to correctly decode into a DNS Question
-            DNSMessage(domain_name_query).print_dns_question(queried_dns_server_ip)
+            DNSMessage(domain_name_query).print_dns_question(next_dns_server_ip)
 
     @staticmethod
-    def print_answers(domain_name: str, answer_records: List[ResourceRecord]):
+    def print_answers(requested_domain_name: str, answer_records: List[ResourceRecord]) -> None:
+        """
+        Prints all answer records that the name resolution of the domain name produced.
+
+        :param requested_domain_name: the domain name we resolved.
+        :param answer_records: the answer records received from the name resolution process.
+        :return: None
+        """
         print('')
         print("Answers:")
         for answer in answer_records:
-            answer.print_record_with_supplied_domain_name(domain_name)
+            answer.print_record_with_supplied_domain_name(requested_domain_name)
 
-if __name__ == '__main__':
-    IPV6_TYPE = 28
-    IPV4_TYPE = 1
+    def check_counter(self) -> None:
+        """
+        If the resolver's counter is zero, then print the zero counter error and exit.
 
-    parser: ArgumentParser = create_parser()
-    args: Namespace = parser.parse_args(sys.argv[1:])
+        :return: None
+        """
+        if self.counter == 0:
+            ErrorMessages.print_zero_counter_error()
 
-    dns_server_ip: str = args.dns_server_ip.pop()
-    domain_name: str = args.domain_name.pop()
+    @staticmethod
+    def check_rcode(rcode: int) -> None:
+        """
+        If rcode is non-zero, then print the appropriate rcode error message and exit.
 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
-
-        answers: List[ResourceRecord]
-
-        resolver: Resolver = Resolver(udp_socket, args.verbose, dns_server_ip)
-        if args.ipv6:
-            answers = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV6_TYPE)
-            pass
-        else:
-            answers = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV4_TYPE)
-
-        Resolver.print_answers(domain_name, answers)
+        :param rcode: the rcode the most recent dns response possessed
+        :return: None
+        """
+        if rcode != 0:
+            ErrorMessages.print_rcode_error_message(rcode)
 
 
