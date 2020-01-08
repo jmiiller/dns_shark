@@ -13,7 +13,7 @@ class DNSMessageUtilitiesTests(unittest.TestCase):
         """
         Test case to create a DNS query to ask for a particular domain name from a dns server.
         """
-        encoded_dns_message: BytesIO = create_domain_name_query('www.cs.ubc.ca', 12345, 15)
+        encoded_dns_message: BytesIO = DNSMessageUtilities.create_domain_name_query('www.cs.ubc.ca', 12345, 15)
 
         encoded_dns_message.seek(0)  # need to start reading the dns message from the start of the BytesIO object
         dns_message = DNSMessage(encoded_dns_message)
