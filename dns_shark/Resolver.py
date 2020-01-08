@@ -31,11 +31,11 @@ class Resolver:
         :return: a list of the answer records that match the desired domain name and type, if present.
         """
 
-        self.check_counter()
+        self._check_counter()
 
         dns_response: DNSMessage = self._request_domain_name(requested_domain_name, next_dns_server_ip, requested_type)
 
-        Resolver.check_rcode(dns_response.rcode)
+        Resolver._check_rcode(dns_response.rcode)
         self._handle_tracing_for_dns_response(dns_response)
 
         if dns_response.authoritative:
@@ -190,7 +190,7 @@ class Resolver:
         for answer in answer_records:
             answer.print_record_with_supplied_domain_name(requested_domain_name)
 
-    def check_counter(self) -> None:
+    def _check_counter(self) -> None:
         """
         If the resolver's counter is zero, then print the zero counter error and exit.
 
@@ -200,7 +200,7 @@ class Resolver:
             ErrorMessages.print_zero_counter_error()
 
     @staticmethod
-    def check_rcode(rcode: int) -> None:
+    def _check_rcode(rcode: int) -> None:
         """
         If rcode is non-zero, then print the appropriate rcode error message and exit.
 
