@@ -55,19 +55,32 @@ class ResourceRecord:
         """
         return inet_ntop(AF_INET6, rdata.read(16))
 
-    def print_record_for_trace(self):
+    def print_record_for_trace(self) -> None:
         """
         Print a trace of the resource record.
+
+        Used for printing the trace of a dns name resolution process.
+
+        :return: None
         """
         print("      %-30s %-10d %-4s %s" % (self.name, self.ttl, ResourceRecord.parse_type(self.type), self.rdata))
 
-    def print_record_with_supplied_domain_name(self, domain_name: str):
+    def print_record_with_supplied_domain_name(self, domain_name: str) -> None:
+        """
+        Print a record with the supplied domain name as the first thing printed.
+
+        Used for printing the answers to the resolution.
+
+        :param domain_name: the domain name to be printed
+        :return: None
+        """
         print("  %s %d   %s %s" % (domain_name, self.ttl, ResourceRecord.parse_type(self.type), self.rdata))
 
     @staticmethod
     def parse_type(type: int) -> str:
         """
         Convert the resource record type to its appropriate string representation.
+
         :param type: the type value
         :return: the type value as a string.
         """
