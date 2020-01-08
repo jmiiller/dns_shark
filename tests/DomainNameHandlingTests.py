@@ -1,14 +1,12 @@
-"""
-Unit testing for DomainNameHandling.py (i.e. domain name encoding/decoding logic)
-"""
-
-
 import unittest
 from src.DomainNameHandling import DomainNameEncoder, DomainNameDecoder  # type: ignore
 from io import BytesIO
 
 
 class DomainNameHandlingTests(unittest.TestCase):
+    """
+    Unit testing for DomainNameHandling.py (i.e. domain name encoding/decoding logic)
+    """
 
     @classmethod
     def setUpClass(cls):
