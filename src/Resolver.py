@@ -101,7 +101,7 @@ class Resolver:
 
     def _handle_tracing_for_dns_response(self, dns_message: DNSMessage):
         if self.verbose:
-            dns_message.print_message()
+            dns_message.print_dns_response()
 
     @staticmethod
     def _handle_tracing_for_dns_query(domain_name_query: BytesIO, queried_dns_server_ip: str, verbose: bool):

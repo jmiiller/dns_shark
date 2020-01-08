@@ -148,7 +148,7 @@ class DNSMessage:
         print('Query ID:    ' + str(self.query_id) + ' ' + self.dns_questions[0].name + '  ' +
               ResourceRecord.parse_type(self.dns_questions[0].type) + ' --> ' + dns_server_ip)
 
-    def print_message(self) -> None:
+    def print_dns_response(self) -> None:
         """
         Print a dns response message.
 
