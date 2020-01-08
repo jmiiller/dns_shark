@@ -6,6 +6,9 @@ from src.ResourceRecord import ResourceRecord  # type: ignore
 
 
 class DNSMessageTests(unittest.TestCase):
+    """
+    Unit testing for DNSMessage.py
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -34,6 +37,9 @@ class DNSMessageTests(unittest.TestCase):
         """
         dns_message: DNSMessage = DNSMessage(BytesIO(self.dns_message_encoded))
 
+        # Check that the query id is correct
+        self.assertEqual(dns_message.query_id, 1)
+
         # Check that flags are correct
         self.assertEqual(dns_message.is_response, True)
         self.assertEqual(dns_message.opcode, 0)
@@ -42,7 +48,6 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(dns_message.recursion_desired, False)
         self.assertEqual(dns_message.recursion_available, True)
         self.assertEqual(dns_message.rcode, 0)
-        self.assertEqual(dns_message.question_count, 1)
 
         # Check that record/question counts are correct
         self.assertEqual(dns_message.question_count, 1)
@@ -73,7 +78,7 @@ class DNSMessageTests(unittest.TestCase):
 
     def test_decode_dns_question(self):
         """
-        Test case to decode a dns question
+        Test case to decode a dns question.
         """
         dns_question: DNSQuestion = DNSQuestion(BytesIO(self.dns_question_encoded), BytesIO(self.dns_question_encoded))
 
@@ -83,7 +88,7 @@ class DNSMessageTests(unittest.TestCase):
 
     def test_decode_resource_record(self):
         """
-        Test case to decode a dns question
+        Test case to decode a resource record.
         """
         resource_record: ResourceRecord = ResourceRecord(BytesIO(self.resource_record_encoded), BytesIO(self.resource_record_encoded))
 
