@@ -17,10 +17,10 @@ class DNSMessage:
         self.is_response: bool = DNSMessage._get_response_value_from_flags(flags)
         self.opcode: int = DNSMessage._get_opcode_value_from_flags(flags)
         self.authoritative: bool = DNSMessage._get_authoritative_value_from_flags(flags)
-        self.is_truncated: bool = DNSMessage._get_is_truncated_from_flags(flags)
-        self.recursion_desired: bool = DNSMessage._get_recursion_desired_from_flags(flags)
-        self.recursion_available: bool = DNSMessage._get_recursion_available_from_flags(flags)
-        self.rcode: int = DNSMessage._get_rcode_from_flags(flags)
+        self.is_truncated: bool = DNSMessage._get_is_truncated_value_from_flags(flags)
+        self.recursion_desired: bool = DNSMessage._get_recursion_desired_value_from_flags(flags)
+        self.recursion_available: bool = DNSMessage._get_recursion_available_value_from_flags(flags)
+        self.rcode: int = DNSMessage._get_rcode_value_from_flags(flags)
 
         # retrieve counts from data
         self.question_count: int = int.from_bytes(data.read(2), 'big')
@@ -64,7 +64,7 @@ class DNSMessage:
         return ((flags & int.from_bytes(b'\x00\x00\x04\x00', 'big')) >> 10) == 1
 
     @staticmethod
-    def _get_is_truncated_from_flags(flags: int) -> bool:
+    def _get_is_truncated_value_from_flags(flags: int) -> bool:
         """
         Retrieve the is_truncated value from flags.
 
@@ -74,7 +74,7 @@ class DNSMessage:
         return ((flags & int.from_bytes(b'\x00\x00\x02\x00', 'big')) >> 9) == 1
 
     @staticmethod
-    def _get_recursion_desired_from_flags(flags: int) -> bool:
+    def _get_recursion_desired_value_from_flags(flags: int) -> bool:
         """
         Retrieve the recursion_desired value from flags.
 
@@ -84,7 +84,7 @@ class DNSMessage:
         return ((flags & int.from_bytes(b'\x00\x00\x01\x00', 'big')) >> 8) == 1
 
     @staticmethod
-    def _get_recursion_available_from_flags(flags: int) -> bool:
+    def _get_recursion_available_value_from_flags(flags: int) -> bool:
         """
         Retrieve the recursion_available value from flags.
 
@@ -94,7 +94,7 @@ class DNSMessage:
         return ((flags & int.from_bytes(b'\x00\x00\x00\x80', 'big')) >> 7) == 1
 
     @staticmethod
-    def _get_rcode_from_flags(flags: int) -> int:
+    def _get_rcode_value_from_flags(flags: int) -> int:
         """
         Retrieve the rcode value from flags.
 

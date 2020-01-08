@@ -94,4 +94,114 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(resource_record.rdlength, 14)
         self.assertEqual(resource_record.rdata, 'x.ca-servers')
 
+    def test_get_response_value_from_flags(self):
+        """
+        Test case to retrieve the get_response field from a dns message's flags.
+        """
+        # flags = 32768 has get_response flag set
+        get_response_value_true: bool = DNSMessage._get_response_value_from_flags(32768)
 
+        # flags = 0 has get_response not set
+        get_response_value_false: bool = DNSMessage._get_response_value_from_flags(0)
+
+        self.assertEqual(get_response_value_true, True)
+        self.assertEqual(get_response_value_false, False)
+
+    def test_get_opcode_value_from_flags(self):
+        """
+        Test case to retrieve the opcode field from a dns message's flags.
+        """
+        # flags = 30720 has opcode = 15
+        get_opcode_value_large: int = DNSMessage._get_opcode_value_from_flags(30720)
+
+        # flags = 0 has opcode = 0
+        get_opcode_value_small: int = DNSMessage._get_opcode_value_from_flags(0)
+
+        self.assertEqual(get_opcode_value_large, 15)
+        self.assertEqual(get_opcode_value_small, 0)
+
+    def test_get_authoritative_value_from_flags(self):
+        """
+        Test case to retrieve the authoritative field from a dns message's flags.
+        """
+        # flags = 1024 has authoritative = True
+        get_authoritative_value_true: bool = DNSMessage._get_authoritative_value_from_flags(1024)
+
+        # flags = 0 has authoritivate = False
+        get_authoritative_value_false: bool = DNSMessage._get_authoritative_value_from_flags(0)
+
+        self.assertEqual(get_authoritative_value_true, True)
+        self.assertEqual(get_authoritative_value_false, False)
+
+    def test_get_is_truncated_value_from_flags(self):
+        """
+        Test case to retrieve the is_truncated field from a dns message's flags.
+        """
+        # flags = 512 has is_truncated = True
+        get_is_truncated_value_true: bool = DNSMessage._get_is_truncated_value_from_flags(512)
+
+        # flags = 0 has is_truncated = False
+        get_is_truncated_value_false: bool = DNSMessage._get_is_truncated_value_from_flags(0)
+
+        self.assertEqual(get_is_truncated_value_true, True)
+        self.assertEqual(get_is_truncated_value_false, False)
+
+    def test_get_recursion_desired_value_from_flags(self):
+        """
+        Test case to retrieve the recursion_desired field from a dns message's flags.
+        """
+        # flags = 256 has recursion_desired = True
+        get_recursion_desired_value_true: bool = DNSMessage._get_recursion_desired_value_from_flags(256)
+
+        # flags = 0 has recursion_desired = False
+        get_recursion_desired_value_false: bool = DNSMessage._get_recursion_desired_value_from_flags(0)
+
+        self.assertEqual(get_recursion_desired_value_true, True)
+        self.assertEqual(get_recursion_desired_value_false, False)
+
+    def test_get_recursion_available_value_from_flags(self):
+        """
+        Test case to retrieve the recursion_available field from a dns message's flags.
+        """
+        # flags = 128 has recursion_available = True
+        get_recursion_available_value_true: bool = DNSMessage._get_recursion_available_value_from_flags(128)
+
+        # flags = 0 has recursion_available = False
+        get_recursion_available_value_false: bool = DNSMessage._get_recursion_available_value_from_flags(0)
+
+        self.assertEqual(get_recursion_available_value_true, True)
+        self.assertEqual(get_recursion_available_value_false, False)
+
+    def test_get_rcode_value_from_flags(self):
+        """
+        Test case to retrieve the rcode field from a dns message's flags.
+        """
+        # flags = 15 has rcode = 15
+        get_rcode_value_large: int = DNSMessage._get_rcode_value_from_flags(15)
+
+        # flags = 0 has rcode = 0
+        get_rcode_value_small: int = DNSMessage._get_rcode_value_from_flags(0)
+
+        self.assertEqual(get_rcode_value_large, 15)
+        self.assertEqual(get_rcode_value_small, 0)
+
+    def test_attempt_to_retrieve_all_flags(self):
+        """
+        Test case to retrieve all the flag values from a hypothetical flags value for a dns message.
+        """
+
+        get_response_value: bool = DNSMessage._get_response_value_from_flags(46218)
+        get_opcode_value: int = DNSMessage._get_opcode_value_from_flags(46218)
+        get_authoritative_value: bool = DNSMessage._get_authoritative_value_from_flags(46218)
+        get_is_truncated_value: bool = DNSMessage._get_is_truncated_value_from_flags(46218)
+        get_recursion_desired_value: bool = DNSMessage._get_recursion_desired_value_from_flags(46218)
+        get_recursion_available_value: bool = DNSMessage._get_recursion_available_value_from_flags(46218)
+        get_rcode_value: int = DNSMessage._get_rcode_value_from_flags(46218)
+
+        self.assertEqual(get_response_value, True)
+        self.assertEqual(get_opcode_value, 6)
+        self.assertEqual(get_authoritative_value, True)
+        self.assertEqual(get_is_truncated_value, False)
+        self.assertEqual(get_recursion_desired_value, False)
+        self.assertEqual(get_recursion_available_value, True)
+        self.assertEqual(get_rcode_value, 10)
