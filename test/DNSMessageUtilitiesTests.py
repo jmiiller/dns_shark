@@ -1,5 +1,5 @@
 import unittest
-from dns_shark.DNSMessageUtilities import DNSMessageUtilities  
+from dns_shark.dns_message_utilities import DNSMessageUtilities
 from dns_shark.dns_message import DNSMessage
 from io import BytesIO
 

@@ -1,4 +1,4 @@
-from dns_shark.DNSMessageUtilities import DNSMessageUtilities
+from dns_shark.dns_message_utilities import DNSMessageUtilities
 from dns_shark.dns_message import DNSMessage
 from dns_shark.ResourceRecord import ResourceRecord
 from io import BytesIO
