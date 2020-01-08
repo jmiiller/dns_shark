@@ -55,8 +55,8 @@ class Resolver:
                 return self.resolve_domain_name(cname_domain_name, self.starting_dns_server, requested_type)
 
             else:
-                pass
-                # print pseudo error
+                Resolver.print_no_matching_ip_address_error()
+
         else:  # not an authoritative response. Therefore, look for a name server to send the next request to.
             name_server_ip: str = dns_response.get_name_server_ip_address()
 
@@ -162,7 +162,24 @@ class Resolver:
             print("Refused - The name server refuses to perform the specified operation for policy reasons.")
             exit(1)
 
+    @staticmethod
+    def print_no_matching_ip_address_error() -> None:
+        """
+        Prints an error message for when a domain name is resolved, but there is no corresponding ip address.
 
+        This type of error occurs when an authoritative response is given for the domain name and the rcode is 0
+        (i.e. it successfully found the domain name), but there is no corresponding answer resource record with
+        an ip for the domain name.
+
+        An example of this error is when attempting to look up the ipv6 address of a domain name that only has an
+        ipv4 address.
+
+        :return: None
+        """
+        print("")
+        print("Missing IP address error: the domain name exists, but does not have the specified "
+              "type of IP address associated with it.")
+        exit(1)
 
 if __name__ == '__main__':
     IPV6_TYPE = 28
