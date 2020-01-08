@@ -33,7 +33,7 @@ class ResourceRecord:
         elif self.type == 28:
             return ResourceRecord._decode_ipv6_address(rdata)
         else:
-            return ''
+            return 'UNSUPPORTED RESOURCE RECORD TYPE'
 
     @staticmethod
     def _decode_ipv4_address(rdata: BytesIO) -> str:
