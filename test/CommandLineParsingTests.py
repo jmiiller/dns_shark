@@ -76,3 +76,7 @@ class CommandLineParsingTests(unittest.TestCase):
         self.assertEqual(parsed_args.domain_name, ['www.jeffreymiiller.com'])
         self.assertEqual(parsed_args.verbose, [True])
         self.assertEqual(parsed_args.ipv6, [True])
+
+
+if __name__ == '__main__':
+    unittest.main()
