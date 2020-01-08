@@ -8,7 +8,7 @@
 
 
 
-from dns_shark.CommandLineParsing import create_parser  # type: ignore
+from dns_shark.command_line_parsing import create_parser  # type: ignore
 import sys
 import socket
 from argparse import ArgumentParser, Namespace
