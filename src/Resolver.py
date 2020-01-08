@@ -8,6 +8,7 @@ from src.ResourceRecord import ResourceRecord  # type: ignore
 from io import BytesIO
 from typing import List
 from random import randint
+from src.ErrorMessages import ErrorMessages
 
 #Todo
 # - break up resolve_domain_name into nice, digestible methods that make the method easier to modify and understand.
@@ -31,13 +32,14 @@ class Resolver:
                             requested_domain_name: str,
                             queried_dns_server_ip: str,
                             requested_type: int):
+
         if self.counter == 0:
-            Resolver.print_zero_counter_error()
+            ErrorMessages.print_zero_counter_error()
 
         dns_response: DNSMessage = self._request_domain_name(requested_domain_name, queried_dns_server_ip, requested_type)
 
         if dns_response.rcode != 0:
-            Resolver.print_rcode_error_message(dns_response.rcode)
+            ErrorMessages.print_rcode_error_message(dns_response.rcode)
 
         self._handle_tracing_for_dns_response(dns_response)
 
@@ -55,7 +57,7 @@ class Resolver:
                 return self.resolve_domain_name(cname_domain_name, self.starting_dns_server, requested_type)
 
             else:
-                Resolver.print_no_matching_ip_address_error()
+                ErrorMessages.print_no_matching_ip_address_error()
 
         else:  # not an authoritative response. Therefore, look for a name server to send the next request to.
             name_server_ip: str = dns_response.get_name_server_ip_address()
@@ -118,68 +120,6 @@ class Resolver:
         print("Answers:")
         for answer in answer_records:
             answer.print_record_with_supplied_domain_name(domain_name)
-
-    @staticmethod
-    def print_zero_counter_error() -> None:
-        """
-        Prints an error message for when too many queries are sent to resolve a domain name. Exits the program.
-
-        :return: None
-        """
-        print("")
-        print("Too many queries error: there appears to be a loop in resolving this domain name.")
-        exit(1)
-
-    @staticmethod
-    def print_rcode_error_message(rcode: int) -> None:
-        """
-        Prints the appropriate error message for the given rcode. Exits if an error occurs.
-
-        The error messages are taken from RFC 1035.
-
-        :param rcode: a given rcode value
-        :return: None
-        """
-        if rcode == 1:
-            print("")
-            print("Format error: the name server was unable to interpret the query.")
-            exit(1)
-        elif rcode == 2:
-            print("")
-            print("Server failure: The name server was unable to process this "
-                  "query due to a problem with the name server.")
-            exit(1)
-        elif rcode == 3:
-            print("")
-            print("Name Error: the domain name you are attempt to resolve does not exist.")
-            exit(1)
-        elif rcode == 4:
-            print("")
-            print("Not Implemented: The name server does not support the requested kind of query.")
-            exit(1)
-        elif rcode == 5:
-            print("")
-            print("Refused - The name server refuses to perform the specified operation for policy reasons.")
-            exit(1)
-
-    @staticmethod
-    def print_no_matching_ip_address_error() -> None:
-        """
-        Prints an error message for when a domain name is resolved, but there is no corresponding ip address.
-
-        This type of error occurs when an authoritative response is given for the domain name and the rcode is 0
-        (i.e. it successfully found the domain name), but there is no corresponding answer resource record with
-        an ip for the domain name.
-
-        An example of this error is when attempting to look up the ipv6 address of a domain name that only has an
-        ipv4 address.
-
-        :return: None
-        """
-        print("")
-        print("Missing IP address error: the domain name exists, but does not have the specified "
-              "type of IP address associated with it.")
-        exit(1)
 
 if __name__ == '__main__':
     IPV6_TYPE = 28
