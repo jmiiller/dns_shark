@@ -2,7 +2,7 @@ from src.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
 from src.DNSMessage import DNSMessage  # type: ignore
 from src.ResourceRecord import ResourceRecord  # type: ignore
 from io import BytesIO
-from typing import List, Union, NoReturn
+from typing import List
 from random import randint
 from src.ErrorMessages import ErrorMessages  # type: ignore
 
