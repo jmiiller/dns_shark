@@ -77,20 +77,20 @@ class ResourceRecord:
         print("  %s %d   %s %s" % (domain_name, self.ttl, ResourceRecord.parse_type(self.type), self.rdata))
 
     @staticmethod
-    def parse_type(type: int) -> str:
+    def parse_type(given_type: int) -> str:
         """
         Convert the resource record type to its appropriate string representation.
 
-        :param type: the type value
+        :param given_type: the type value
         :return: the type value as a string.
         """
-        if type == 1:
+        if given_type == 1:
             return 'A'
-        elif type == 2:
+        elif given_type == 2:
             return 'NS'
-        elif type == 5:
+        elif given_type == 5:
             return 'CN'
-        elif type == 28:
+        elif given_type == 28:
             return 'AAAA'
         else:
-            return str(type)
+            return str(given_type)
