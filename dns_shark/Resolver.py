@@ -4,7 +4,7 @@ from dns_shark.ResourceRecord import ResourceRecord
 from io import BytesIO
 from typing import List, Optional
 from random import randint
-from dns_shark.ErrorMessages import ErrorMessages
+from dns_shark.error_messages import ErrorMessages
 
 
 class Resolver:
