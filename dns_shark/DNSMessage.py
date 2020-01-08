@@ -1,5 +1,5 @@
-from src.DNSQuestion import DNSQuestion  # type: ignore
-from src.ResourceRecord import ResourceRecord  # type: ignore
+from dns_shark.DNSQuestion import DNSQuestion  # type: ignore
+from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
 from typing import List, Optional
 from io import BytesIO
 

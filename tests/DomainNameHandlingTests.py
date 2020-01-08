@@ -1,5 +1,5 @@
 import unittest
-from src.DomainNameHandling import DomainNameEncoder, DomainNameDecoder  # type: ignore
+from dns_shark.DomainNameHandling import DomainNameEncoder, DomainNameDecoder  # type: ignore
 from io import BytesIO
 
 

@@ -1,13 +1,23 @@
-from src.CommandLineParsing import create_parser  # type: ignore
+# TODO:
+# Add test coverage for ResourceRecord.py
+# Add test coverage for Resolver.py
+# Add to PyPi
+# Add exception handling. (Maybe convert error messages into exceptions.)
+
+
+
+
+
+from dns_shark.CommandLineParsing import create_parser  # type: ignore
 import sys
 import socket
 from argparse import ArgumentParser, Namespace
-from src.ResourceRecord import ResourceRecord  # type: ignore
+from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
 from typing import List
-from src.Resolver import Resolver  # type: ignore
+from dns_shark.Resolver import Resolver  # type: ignore
 
 
-if __name__ == '__main__':
+def main():
     IPV6_TYPE = 28
     IPV4_TYPE = 1
 
@@ -30,3 +40,7 @@ if __name__ == '__main__':
         Resolver.print_answers(domain_name, answers)
 
         exit(0)
+
+
+if __name__ == '__main__':
+    main()

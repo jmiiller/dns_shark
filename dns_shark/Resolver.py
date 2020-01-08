@@ -1,10 +1,10 @@
-from src.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
-from src.DNSMessage import DNSMessage  # type: ignore
-from src.ResourceRecord import ResourceRecord  # type: ignore
+from dns_shark.DNSMessageUtilities import DNSMessageUtilities  # type: ignore
+from dns_shark.DNSMessage import DNSMessage  # type: ignore
+from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
 from io import BytesIO
 from typing import List
 from random import randint
-from src.ErrorMessages import ErrorMessages  # type: ignore
+from dns_shark.ErrorMessages import ErrorMessages  # type: ignore
 
 
 class Resolver:

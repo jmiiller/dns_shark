@@ -1,5 +1,5 @@
 import unittest
-from src.CommandLineParsing import create_parser  # type: ignore
+from dns_shark.CommandLineParsing import create_parser  # type: ignore
 
 
 class CommandLineParsingTests(unittest.TestCase):

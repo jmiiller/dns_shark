@@ -1,4 +1,4 @@
-from src.DomainNameHandling import DomainNameEncoder  # type: ignore
+from dns_shark.DomainNameHandling import DomainNameEncoder  # type: ignore
 from io import BytesIO
 
 
