@@ -25,12 +25,14 @@ class Resolver:
         self.udp_socket = sock
         self.verbose: bool = verbose
         self.starting_dns_server: str = starting_dns_server
-        self.counter: int = 30  # maximum number of requests allowed for name resolution. Used to avoid infinite loops.
+        self.counter: int = 30  # Maximum number of requests allowed for name resolution. Used to avoid infinite loops.
 
     def resolve_domain_name(self,
                             requested_domain_name: str,
                             queried_dns_server_ip: str,
                             requested_type: int):
+        if self.counter == 0:
+            Resolver.print_zero_counter_error()
 
         dns_response: DNSMessage = self._request_domain_name(requested_domain_name, queried_dns_server_ip, requested_type)
 
@@ -81,6 +83,7 @@ class Resolver:
                                                                                   requested_type)
         self.udp_socket.sendto(domain_name_query.getvalue(), (queried_dns_server_ip, 53))
 
+        self.counter = self.counter - 1 # decrement the counter by one, since we have just sent a request
 
         Resolver._handle_tracing_for_dns_query(domain_name_query, queried_dns_server_ip, self.verbose)
 
@@ -115,6 +118,17 @@ class Resolver:
         print("Answers:")
         for answer in answer_records:
             answer.print_record_with_supplied_domain_name(domain_name)
+
+    @staticmethod
+    def print_zero_counter_error() -> None:
+        """
+        Prints an error message for when too many queries are sent to resolve a domain name. Exits the program.
+
+        :return: None
+        """
+        print("")
+        print("Too many queries error: there appears to be a loop in resolving this domain name.")
+        exit(1)
 
     @staticmethod
     def print_rcode_error_message(rcode: int) -> None:
