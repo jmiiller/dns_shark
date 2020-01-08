@@ -1,5 +1,5 @@
 import unittest
-from dns_shark.DomainNameHandling import DomainNameEncoder, DomainNameDecoder  
+from dns_shark.domain_name_handling import DomainNameEncoder, DomainNameDecoder
 from io import BytesIO
 
 

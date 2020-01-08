@@ -1,5 +1,5 @@
 from io import BytesIO
-from dns_shark.DomainNameHandling import DomainNameDecoder  
+from dns_shark.domain_name_handling import DomainNameDecoder
 
 
 class DNSQuestion:

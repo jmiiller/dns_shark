@@ -1,4 +1,4 @@
-from dns_shark.DomainNameHandling import DomainNameDecoder    
+from dns_shark.domain_name_handling import DomainNameDecoder
 from io import BytesIO
 from socket import inet_ntop, AF_INET, AF_INET6
 

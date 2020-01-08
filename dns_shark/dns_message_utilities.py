@@ -1,4 +1,4 @@
-from dns_shark.DomainNameHandling import DomainNameEncoder  
+from dns_shark.domain_name_handling import DomainNameEncoder
 from io import BytesIO
 
 
