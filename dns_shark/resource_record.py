@@ -6,6 +6,17 @@ from socket import inet_ntop, AF_INET, AF_INET6
 class ResourceRecord:
     """
     Handles all logic pertaining to decoding and encoding Resource Records.
+
+    Instance Attributes:
+
+        name: the name field of the resource record
+        type: the type field of the resource record
+        response_class: the class field of the resource record
+        ttl: the ttl field of the resource record
+        rdlength: the rdlength field of the resource record
+        rdata: the rdata field of the resource record
+
+        see https://tools.ietf.org/rfc/rfc1035.txt for more description on the meaning of these fields
     """
 
     def __init__(self, name: str, type: int, response_class: int, ttl: int, rdlength: int, rdata: str):
