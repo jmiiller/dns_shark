@@ -8,29 +8,49 @@ class ResourceRecord:
     Handles all logic pertaining to decoding and encoding Resource Records.
     """
 
-    def __init__(self, data: BytesIO, copy_of_data: BytesIO):
-        self.name: str = DomainNameDecoder.decode_domain_name(data, copy_of_data)
-        self.type: int = int.from_bytes(data.read(2), 'big')
-        self.response_class: int = int.from_bytes(data.read(2), 'big')
-        self.ttl: int = int.from_bytes(data.read(4), 'big')
-        self.rdlength: int = int.from_bytes(data.read(2), 'big')
-        self.rdata: str = self._decode_rdata(BytesIO(data.read(self.rdlength)), copy_of_data)
+    def __init__(self, name: str, type: int, response_class: int, ttl: int, rdlength: int, rdata: str):
+        self.name: str = name
+        self.type: int = type
+        self.response_class: int = response_class
+        self.ttl: int = ttl
+        self.rdlength: int = rdlength
+        self.rdata: str = rdata
 
-    def _decode_rdata(self, rdata: BytesIO, copy_of_data: BytesIO) -> str:
+    @staticmethod
+    def decode_resource_record(data: BytesIO, copy_of_message: BytesIO) -> 'ResourceRecord':
+        """
+        Factory method to decode a resource record from the provided data.
+
+        :param data: the data to be decoded into a resource record.
+        :param copy_of_message: a copy of the entire dns message to be decoded. Used for pointer handling.
+        :return: a newly built resource record object, with fields decoded from the data.
+        """
+        name: str = DomainNameDecoder.decode_domain_name(data, copy_of_message)
+        type: int = int.from_bytes(data.read(2), 'big')
+        response_class: int = int.from_bytes(data.read(2), 'big')
+        ttl: int = int.from_bytes(data.read(4), 'big')
+        rdlength: int = int.from_bytes(data.read(2), 'big')
+        rdata: str = ResourceRecord._decode_rdata(BytesIO(data.read(rdlength)), copy_of_message, type)
+
+        return ResourceRecord(name, type, response_class, ttl, rdlength, rdata)
+
+    @staticmethod
+    def _decode_rdata(rdata: BytesIO, copy_of_data: BytesIO, record_type: int) -> str:
         """
         Decode the rdata field to a string.
 
         :param rdata: the rdata of the resource record
         :param copy_of_data: a copy of the entire data of the dns message, used for handling pointers in domain names.
+        :param record_type: the type of the resource record.
         :return: the decoded rdata field as a string
         """
-        if self.type == 1:
+        if record_type == 1:
             return ResourceRecord._decode_ipv4_address(rdata)
-        elif self.type == 2:
+        elif record_type == 2:
             return DomainNameDecoder.decode_domain_name(rdata, copy_of_data)
-        elif self.type == 5:
+        elif record_type == 5:
             return DomainNameDecoder.decode_domain_name(rdata, copy_of_data)
-        elif self.type == 28:
+        elif record_type == 28:
             return ResourceRecord._decode_ipv6_address(rdata)
         else:
             return 'UNSUPPORTED RESOURCE RECORD TYPE'

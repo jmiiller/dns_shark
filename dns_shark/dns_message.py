@@ -131,7 +131,7 @@ class DNSMessage:
         """
         list_of_records = []
         for _ in range(num_of_records):
-            list_of_records.append(ResourceRecord(data, copy_of_data))
+            list_of_records.append(ResourceRecord.decode_resource_record(data, copy_of_message))
 
         return list_of_records
 
