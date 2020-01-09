@@ -1,4 +1,4 @@
-# DNS Shark Domain Name Resolver
+# DNS Shark
 
 DNS Shark is a simple domain name resolver that is able to perform domain name resolution.
 
