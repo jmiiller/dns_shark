@@ -35,21 +35,21 @@ class ResourceRecord:
         return ResourceRecord(name, type, response_class, ttl, rdlength, rdata)
 
     @staticmethod
-    def _decode_rdata(rdata: BytesIO, copy_of_data: BytesIO, record_type: int) -> str:
+    def _decode_rdata(rdata: BytesIO, copy_of_message: BytesIO, record_type: int) -> str:
         """
         Decode the rdata field to a string.
 
         :param rdata: the rdata of the resource record
-        :param copy_of_data: a copy of the entire data of the dns message, used for handling pointers in domain names.
+        :param copy_of_message: a copy of the entire data of the dns message, used for handling pointers in domain names.
         :param record_type: the type of the resource record.
         :return: the decoded rdata field as a string
         """
         if record_type == 1:
             return ResourceRecord._decode_ipv4_address(rdata)
         elif record_type == 2:
-            return DomainNameDecoder.decode_domain_name(rdata, copy_of_data)
+            return DomainNameDecoder.decode_domain_name(rdata, copy_of_message)
         elif record_type == 5:
-            return DomainNameDecoder.decode_domain_name(rdata, copy_of_data)
+            return DomainNameDecoder.decode_domain_name(rdata, copy_of_message)
         elif record_type == 28:
             return ResourceRecord._decode_ipv6_address(rdata)
         else:

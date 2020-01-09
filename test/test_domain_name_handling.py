@@ -74,8 +74,8 @@ class DomainNameHandlingTests(unittest.TestCase):
         """
         reader: BytesIO = BytesIO(self.domain_name_with_pointers_encoded)
         reader.seek(15)  # navigate to the start of the second domain name, which is the one we want to decode
-        copy_of_data: BytesIO = BytesIO(self.domain_name_with_pointers_encoded)
+        copy_of_message: BytesIO = BytesIO(self.domain_name_with_pointers_encoded)
 
-        result: str = DomainNameDecoder.decode_domain_name(reader, copy_of_data)
+        result: str = DomainNameDecoder.decode_domain_name(reader, copy_of_message)
 
         self.assertEqual(result, self.domain_name_with_pointers)

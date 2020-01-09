@@ -104,28 +104,28 @@ class DNSMessage:
         return flags & int.from_bytes(b'\x00\x00\x00\x0f', 'big')
 
     @staticmethod
-    def _read_dns_questions(data: BytesIO, copy_of_data: BytesIO, num_of_questions: int) -> List[DNSQuestion]:
+    def _read_dns_questions(data: BytesIO, copy_of_message: BytesIO, num_of_questions: int) -> List[DNSQuestion]:
         """
         Read the dns questions from the remaining dns message data.
 
         :param data: the remaining data of the dns message to be processed
-        :param copy_of_data: a copy of the entire dns message, used for handling pointers in domain names
+        :param copy_of_message: a copy of the entire dns message, used for handling pointers in domain names
         :param num_of_questions: number of questions to decode
         :return: list of the dns questions decoded
         """
         list_of_questions = []
         for _ in range(num_of_questions):
-            list_of_questions.append(DNSQuestion(data, copy_of_data))
+            list_of_questions.append(DNSQuestion(data, copy_of_message))
 
         return list_of_questions
 
     @staticmethod
-    def _read_resource_records(data: BytesIO, copy_of_data: BytesIO, num_of_records: int) -> List[ResourceRecord]:
+    def _read_resource_records(data: BytesIO, copy_of_message: BytesIO, num_of_records: int) -> List[ResourceRecord]:
         """
         Read the resource records from the remaining dns message data.
 
         :param data: the remaining data of the dns message to be processed
-        :param copy_of_data: a copy of the entire dns message, used for handling pointers in domain names
+        :param copy_of_message: a copy of the entire dns message, used for handling pointers in domain names
         :param num_of_records: number of records to decode
         :return: list of the resource records decoded
         """
