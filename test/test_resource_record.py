@@ -5,7 +5,7 @@ from io import BytesIO
 
 class DNSMessageTests(unittest.TestCase):
     """
-    Unit testing for ResourceRecord.py
+    Unit testing for resource_record.py
     """
 
     @classmethod

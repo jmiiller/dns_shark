@@ -7,7 +7,7 @@ from dns_shark.resource_record import ResourceRecord
 
 class DNSMessageTests(unittest.TestCase):
     """
-    Unit testing for DNSMessage.py
+    Unit testing for dns_message.py
     """
 
     @classmethod

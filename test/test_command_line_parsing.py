@@ -4,7 +4,7 @@ from dns_shark.command_line_parsing import create_parser
 
 class CommandLineParsingTests(unittest.TestCase):
     """
-    Unit testing for CommandLineParsing.py (i.e. command line parsing logic)
+    Unit testing for command_line_parsing.py (i.e. command line parsing logic)
     """
 
     def setUp(self):

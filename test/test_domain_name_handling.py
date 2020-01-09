@@ -5,7 +5,7 @@ from io import BytesIO
 
 class DomainNameHandlingTests(unittest.TestCase):
     """
-    Unit testing for DomainNameHandling.py (i.e. domain name encoding/decoding logic)
+    Unit testing for domain_name_handling.py (i.e. domain name encoding/decoding logic)
     """
 
     @classmethod

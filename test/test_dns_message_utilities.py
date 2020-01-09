@@ -6,7 +6,7 @@ from io import BytesIO
 
 class DNSMessageUtilitiesTests(unittest.TestCase):
     """
-    Unit testing for DNSMessageUtilities.py
+    Unit testing for dns_message_utilities.py
     """
 
     def test_create_domain_name_query(self):
