@@ -1,8 +1,9 @@
 # TODO:
-# Add test coverage for ResourceRecord.py
+# Add to PyPi  ****
+# Add test coverage for ResourceRecord.py  ****
+# Add test coverage for resource record esque methods in DNSMessage.py
 # Add test coverage for Resolver.py
-# Add to PyPi
-# Add exception handling. (Maybe convert error messages into exceptions.)
+# Add wrapper for resolver to provide easy use to others from their own code.
 
 
 
@@ -10,11 +11,11 @@
 
 from dns_shark.command_line_parsing import create_parser  # type: ignore
 import sys
-import socket
 from argparse import ArgumentParser, Namespace
 from dns_shark.resource_record import ResourceRecord  # type: ignore
 from typing import List
-from dns_shark.resolver_core import Resolver  # type: ignore
+from dns_shark.resolver_core import ResolverCore  # type: ignore
+from dns_shark.resolver import Resolver
 
 IPV6_TYPE = 28
 IPV4_TYPE = 1
@@ -28,17 +29,21 @@ def main():
     dns_server_ip: str = args.dns_server_ip.pop()
     domain_name: str = args.domain_name.pop()
 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
+    if args.ipv6 is None:
+        ipv6: bool = False
+    else:
+        ipv6: bool = True
 
-        resolver: Resolver = Resolver(udp_socket, args.verbose, dns_server_ip)
-        if args.ipv6:
-            answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV6_TYPE)
-        else:
-            answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV4_TYPE)
+    if args.verbose is None:
+        verbose: bool = False
+    else:
+        verbose: bool = True
 
-        Resolver.print_answers(domain_name, answers)
+    answers: List[ResourceRecord] = Resolver.ask(domain_name, dns_server_ip, ipv6, verbose)
 
-        exit(0)
+    ResolverCore.print_answers(domain_name, answers)
+
+    exit(0)
 
 
 if __name__ == '__main__':

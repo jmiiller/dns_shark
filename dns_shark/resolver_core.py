@@ -7,9 +7,11 @@ from random import randint
 from dns_shark.error_messages import ErrorMessages
 
 
-class Resolver:
+class ResolverCore:
     """
     Top-level class in charge of resolving domain names.
+
+    Use the resolve_domain_name() method to resolve domain names to the requested resource record type.
     """
 
     def __init__(self, sock, verbose: bool, starting_dns_server: str):
@@ -17,6 +19,7 @@ class Resolver:
         self.verbose: bool = verbose
         self.starting_dns_server: str = starting_dns_server
         self.counter: int = 30  # Maximum number of requests allowed for name resolution. Used to avoid infinite loops.
+
 
     def resolve_domain_name(self, requested_domain_name: str,
                             next_dns_server_ip: str,
@@ -35,7 +38,7 @@ class Resolver:
 
         dns_response: DNSMessage = self._request_domain_name(requested_domain_name, next_dns_server_ip, requested_type)
 
-        Resolver._check_rcode(dns_response.rcode)
+        ResolverCore._check_rcode(dns_response.rcode)
         self._handle_tracing_for_dns_response(dns_response)
 
         if dns_response.authoritative:
