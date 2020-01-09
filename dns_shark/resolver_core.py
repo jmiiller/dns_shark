@@ -11,15 +11,20 @@ class ResolverCore:
     """
     Top-level class in charge of resolving domain names.
 
-    Use the resolve_domain_name() method to resolve domain names to the requested resource record type.
+    Instance Attributes:
+
+        udp_socket: the socket used for communication with the dns servers
+        verbose: a boolean flag indicating whether verbose output is desired
+        starting_dns_server: the dns server that the name resolution search begins with
+        counter: the maximum number of requests allowed for a single domain name resolution.
+                 Used to exit from infinite loops.
     """
 
     def __init__(self, sock, verbose: bool, starting_dns_server: str):
         self.udp_socket = sock
         self.verbose: bool = verbose
         self.starting_dns_server: str = starting_dns_server
-        self.counter: int = 30  # Maximum number of requests allowed for name resolution. Used to avoid infinite loops.
-
+        self.counter: int = 30
 
     def resolve_domain_name(self, requested_domain_name: str,
                             next_dns_server_ip: str,
