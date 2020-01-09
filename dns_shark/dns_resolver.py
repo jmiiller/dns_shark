@@ -29,3 +29,4 @@ class Resolver:
             else:
                 answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server, 1)
                 return answers
+

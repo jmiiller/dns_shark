@@ -182,3 +182,11 @@ Response ID: 35735 Authoritative = True
 Answers:
   www.google.com 300   AAAA 2607:f8b0:400a:809::2004
 ```
+
+You can also call DNS Shark in your own Python code, by importing from the resolver package:
+
+```
+>>> from dns_shark.dns_resolver import Resolver
+>>> Resolver.ask('www.google.com', '199.7.83.42')
+[<dns_shark.resource_record.ResourceRecord object at 0x109d06790>]   <<< a list of the resource records returned from the name resolution process
+```

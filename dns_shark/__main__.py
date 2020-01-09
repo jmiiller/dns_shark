@@ -15,7 +15,7 @@ from argparse import ArgumentParser, Namespace
 from dns_shark.resource_record import ResourceRecord  # type: ignore
 from typing import List
 from dns_shark.resolver_core import ResolverCore  # type: ignore
-from dns_shark.resolver import Resolver
+from dns_shark.dns_resolver import Resolver
 
 IPV6_TYPE = 28
 IPV4_TYPE = 1
