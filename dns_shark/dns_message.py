@@ -115,7 +115,7 @@ class DNSMessage:
         """
         list_of_questions = []
         for _ in range(num_of_questions):
-            list_of_questions.append(DNSQuestion(data, copy_of_message))
+            list_of_questions.append(DNSQuestion.decode_dns_question(data, copy_of_message))
 
         return list_of_questions
 

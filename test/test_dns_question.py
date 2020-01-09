@@ -19,7 +19,8 @@ class DNSQuestionTests(unittest.TestCase):
         """
         Test case to decode a dns question.
         """
-        dns_question: DNSQuestion = DNSQuestion(BytesIO(self.dns_question_encoded), BytesIO(self.dns_question_encoded))
+        dns_question: DNSQuestion = DNSQuestion.decode_dns_question(BytesIO(self.dns_question_encoded),
+                                                                    BytesIO(self.dns_question_encoded))
 
         self.assertEqual(dns_question.name, 'www.cs.ubc.ca')
         self.assertEqual(dns_question.type, 1)
