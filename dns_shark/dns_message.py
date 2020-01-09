@@ -7,6 +7,30 @@ from io import BytesIO
 class DNSMessage:
     """
     Handles all logic pertaining to decoding and encoding DNS Messages.
+
+    Instance Attributes:
+
+        query_id: the query id of the dns message
+
+        is_response: a boolean flag indicating whether this dns message is a response
+        opcode: the opcode of the dns message
+        authoritative: a boolean flag indicating whether this dns message is authoritative
+        is_truncated: a boolean flag indicating whether this dns message is truncated
+        recursion_desired: a boolean flag indicating whether recursion is desired in the name resolution process
+        recursion_available: a boolean flag indicating whether recursion is available in the name resolution process
+        rcode: the rcode of the dns message
+
+        question_count: the number of questions in the dns message
+        answer_count: the number of answer resource records in the dns message
+        name_server_count: the number of name server resource records in the dns message
+        additional_count: the number of additional resource records in the dns message
+
+        dns_questions: a list of the dns questions in the dns message
+        answer_records: a list of the answer resource records in the dns message
+        name server records: a list of the name server resource records in the dns message
+        additional records: a list of the additional resource records in the dns message
+
+        see https://tools.ietf.org/rfc/rfc1035.txt for more description on the meaning of these fields
     """
 
     def __init__(self,
@@ -26,6 +50,7 @@ class DNSMessage:
                  answer_records: List[ResourceRecord],
                  name_server_records: List[ResourceRecord],
                  additional_records: List[ResourceRecord]):
+
         self.query_id: int = query_id
 
         # flags
