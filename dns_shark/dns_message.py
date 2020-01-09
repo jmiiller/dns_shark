@@ -9,29 +9,88 @@ class DNSMessage:
     Handles all logic pertaining to decoding and encoding DNS Messages.
     """
 
-    def __init__(self, data: BytesIO):
-        self.query_id: int = int.from_bytes(data.read(2), 'big')
+    def __init__(self,
+                 query_id: int,
+                 is_response: bool,
+                 opcode: int,
+                 authoritative: bool,
+                 is_truncated: bool,
+                 recursion_desired: bool,
+                 recursion_available: bool,
+                 rcode: int,
+                 question_count: int,
+                 answer_count: int,
+                 name_server_count: int,
+                 additional_count: int,
+                 dns_questions: List[DNSQuestion],
+                 answer_records: List[ResourceRecord],
+                 name_server_records: List[ResourceRecord],
+                 additional_records: List[ResourceRecord]):
+        self.query_id: int = query_id
+
+        # flags
+        self.is_response: bool = is_response
+        self.opcode: int = opcode
+        self.authoritative: bool = authoritative
+        self.is_truncated: bool = is_truncated
+        self.recursion_desired: bool = recursion_desired
+        self.recursion_available: bool = recursion_available
+        self.rcode: int = rcode
+
+        # resource record counts
+        self.question_count: int = question_count
+        self.answer_count: int = answer_count
+        self.nameserver_count: int = name_server_count
+        self.additional_count: int = additional_count
+
+        # resource records and dns questions
+        self.dns_questions: List[DNSQuestion] = dns_questions
+        self.answer_records: List[ResourceRecord] = answer_records
+        self.name_server_records: List[ResourceRecord] = name_server_records
+        self.additional_records: List[ResourceRecord] = additional_records
+
+    @staticmethod
+    def decode_dns_message(data: BytesIO):
+        query_id: int = int.from_bytes(data.read(2), 'big')
 
         # retrieve flag values from data
         flags: int = int.from_bytes(data.read(2), 'big')
-        self.is_response: bool = DNSMessage._get_response_value_from_flags(flags)
-        self.opcode: int = DNSMessage._get_opcode_value_from_flags(flags)
-        self.authoritative: bool = DNSMessage._get_authoritative_value_from_flags(flags)
-        self.is_truncated: bool = DNSMessage._get_is_truncated_value_from_flags(flags)
-        self.recursion_desired: bool = DNSMessage._get_recursion_desired_value_from_flags(flags)
-        self.recursion_available: bool = DNSMessage._get_recursion_available_value_from_flags(flags)
-        self.rcode: int = DNSMessage._get_rcode_value_from_flags(flags)
+        is_response: bool = DNSMessage._get_response_value_from_flags(flags)
+        opcode: int = DNSMessage._get_opcode_value_from_flags(flags)
+        authoritative: bool = DNSMessage._get_authoritative_value_from_flags(flags)
+        is_truncated: bool = DNSMessage._get_is_truncated_value_from_flags(flags)
+        recursion_desired: bool = DNSMessage._get_recursion_desired_value_from_flags(flags)
+        recursion_available: bool = DNSMessage._get_recursion_available_value_from_flags(flags)
+        rcode: int = DNSMessage._get_rcode_value_from_flags(flags)
 
         # retrieve counts from data
-        self.question_count: int = int.from_bytes(data.read(2), 'big')
-        self.answer_count: int = int.from_bytes(data.read(2), 'big')
-        self.nameserver_count: int = int.from_bytes(data.read(2), 'big')
-        self.additional_count: int = int.from_bytes(data.read(2), 'big')
+        question_count: int = int.from_bytes(data.read(2), 'big')
+        answer_count: int = int.from_bytes(data.read(2), 'big')
+        name_server_count: int = int.from_bytes(data.read(2), 'big')
+        additional_count: int = int.from_bytes(data.read(2), 'big')
 
-        self.dns_questions: List[DNSQuestion] = DNSMessage._read_dns_questions(data, data, self.question_count)
-        self.answer_records: List[ResourceRecord] = DNSMessage._read_resource_records(data, data, self.answer_count)
-        self.name_server_records: List[ResourceRecord] = DNSMessage._read_resource_records(data, data, self.nameserver_count)
-        self.additional_records: List[ResourceRecord] = DNSMessage._read_resource_records(data, data, self.additional_count)
+        dns_questions: List[DNSQuestion] = DNSMessage._read_dns_questions(data, data, question_count)
+        answer_records: List[ResourceRecord] = DNSMessage._read_resource_records(data, data, answer_count)
+        name_server_records: List[ResourceRecord] = DNSMessage._read_resource_records(data, data, name_server_count)
+        additional_records: List[ResourceRecord] = DNSMessage._read_resource_records(data, data, additional_count)
+
+        return DNSMessage(query_id,
+                          is_response,
+                          opcode,
+                          authoritative,
+                          is_truncated,
+                          recursion_desired,
+                          recursion_available,
+                          rcode,
+                          question_count,
+                          answer_count,
+                          name_server_count,
+                          additional_count,
+                          dns_questions,
+                          answer_records,
+                          name_server_records,
+                          additional_records)
+
 
     @staticmethod
     def _get_response_value_from_flags(flags: int) -> bool:

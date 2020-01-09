@@ -144,7 +144,7 @@ class Resolver:
         response value.
         """
         received_data = self.udp_socket.recv(1024)
-        received_dns_message: DNSMessage = DNSMessage(BytesIO(received_data))
+        received_dns_message: DNSMessage = DNSMessage.decode_dns_message(BytesIO(received_data))
 
         if (received_dns_message.query_id != expected_query_id) or not received_dns_message.is_response:
             self._receive_dns_message(expected_query_id)
@@ -174,7 +174,7 @@ class Resolver:
             print('')
             domain_name_query.seek(0)  # need to ensure we are at the start of the writer
                                        # to be able to correctly decode into a DNS Question
-            DNSMessage(domain_name_query).print_dns_question(next_dns_server_ip)
+            DNSMessage.decode_dns_message(domain_name_query).print_dns_question(next_dns_server_ip)
 
     @staticmethod
     def print_answers(requested_domain_name: str, answer_records: List[ResourceRecord]) -> None:

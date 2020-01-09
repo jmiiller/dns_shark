@@ -16,7 +16,7 @@ class DNSMessageUtilitiesTests(unittest.TestCase):
         encoded_dns_message: BytesIO = DNSMessageUtilities.create_domain_name_query('www.cs.ubc.ca', 12345, 15)
 
         encoded_dns_message.seek(0)  # need to start reading the dns message from the start of the BytesIO object
-        dns_message = DNSMessage(encoded_dns_message)
+        dns_message = DNSMessage.decode_dns_message(encoded_dns_message)
 
         # Check that the query id is correct
         self.assertEqual(dns_message.query_id, 12345)

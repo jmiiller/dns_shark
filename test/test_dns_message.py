@@ -31,7 +31,7 @@ class DNSMessageTests(unittest.TestCase):
         """
         Test case to decode an entire dns message. This dns message contains resource records with pointers.
         """
-        dns_message: DNSMessage = DNSMessage(BytesIO(self.dns_message_encoded))
+        dns_message: DNSMessage = DNSMessage.decode_dns_message(BytesIO(self.dns_message_encoded))
 
         # Check that the query id is correct
         self.assertEqual(dns_message.query_id, 1)
