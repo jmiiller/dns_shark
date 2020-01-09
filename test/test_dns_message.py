@@ -1,8 +1,6 @@
 import unittest
 from io import BytesIO
 from dns_shark.dns_message import DNSMessage
-from dns_shark.dns_question import DNSQuestion
-from dns_shark.resource_record import ResourceRecord
 
 
 class DNSMessageTests(unittest.TestCase):
@@ -28,8 +26,6 @@ class DNSMessageTests(unittest.TestCase):
                                          b'\x05\x00\x00\x83\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\xc0h\x00\x01\x00' \
                                          b'\x01\x00\x02MY\x00\x04\xc7\x04\x90\x02\xc0h\x00\x1c\x00\x01\x00\x02MY\x00' \
                                          b'\x10 \x01\x05\x00\x00\xa7\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02'
-        cls.dns_question_encoded: bytes = b'\x03www\x02cs\x03ubc\x02ca\x00\x00\x01\x00\x01'
-        cls.resource_record_encoded: bytes = b'\x02ca\x00\x00\x02\x00\x01\x00\x02MY\x00\x0e\x01x\nca-servers\x00'
 
     def test_decode_dns_message(self):
         """
@@ -75,29 +71,6 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(dns_message.additional_records[0].ttl, 150873)
         self.assertEqual(dns_message.additional_records[0].rdlength, 4)
         self.assertEqual(dns_message.additional_records[0].rdata, '199.253.250.68')
-
-    def test_decode_dns_question(self):
-        """
-        Test case to decode a dns question.
-        """
-        dns_question: DNSQuestion = DNSQuestion(BytesIO(self.dns_question_encoded), BytesIO(self.dns_question_encoded))
-
-        self.assertEqual(dns_question.name, 'www.cs.ubc.ca')
-        self.assertEqual(dns_question.type, 1)
-        self.assertEqual(dns_question.response_class, 1)
-
-    def test_decode_resource_record(self):
-        """
-        Test case to decode a resource record.
-        """
-        resource_record: ResourceRecord = ResourceRecord(BytesIO(self.resource_record_encoded), BytesIO(self.resource_record_encoded))
-
-        self.assertEqual(resource_record.name, 'ca')
-        self.assertEqual(resource_record.type, 2)
-        self.assertEqual(resource_record.response_class, 1)
-        self.assertEqual(resource_record.ttl, 150873)
-        self.assertEqual(resource_record.rdlength, 14)
-        self.assertEqual(resource_record.rdata, 'x.ca-servers')
 
     def test_get_response_value_from_flags_true(self):
         """

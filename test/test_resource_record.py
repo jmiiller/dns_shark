@@ -22,7 +22,21 @@ class DNSMessageTests(unittest.TestCase):
         cls.ipv4_address_data: bytes = b'\x10\x08\x20\x02'
         cls.ipv6_address_data: bytes = b'\x10\x08\x20\x02\x10\x08\x20\x02\x10\x08\x20\x02\x10\x08\x20\x02'
 
-        cls.type_a_resource_record: ResourceRecord = ResourceRecord()
+        cls.resource_record_encoded: bytes = b'\x02ca\x00\x00\x02\x00\x01\x00\x02MY\x00\x0e\x01x\nca-servers\x00'
+
+    def test_decode_resource_record(self):
+        """
+        Test case to decode a resource record.
+        """
+        resource_record: ResourceRecord = ResourceRecord.decode_resource_record(BytesIO(self.resource_record_encoded),
+                                                                                BytesIO(self.resource_record_encoded))
+
+        self.assertEqual(resource_record.name, 'ca')
+        self.assertEqual(resource_record.type, 2)
+        self.assertEqual(resource_record.response_class, 1)
+        self.assertEqual(resource_record.ttl, 150873)
+        self.assertEqual(resource_record.rdlength, 14)
+        self.assertEqual(resource_record.rdata, 'x.ca-servers')
 
     def test_parse_type_a_type(self):
         """
