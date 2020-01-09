@@ -12,14 +12,15 @@ from dns_shark.command_line_parsing import create_parser  # type: ignore
 import sys
 import socket
 from argparse import ArgumentParser, Namespace
-from dns_shark.ResourceRecord import ResourceRecord  # type: ignore
+from dns_shark.resource_record import ResourceRecord  # type: ignore
 from typing import List
-from dns_shark.resolver import Resolver  # type: ignore
+from dns_shark.resolver_core import Resolver  # type: ignore
+
+IPV6_TYPE = 28
+IPV4_TYPE = 1
 
 
 def main():
-    IPV6_TYPE = 28
-    IPV4_TYPE = 1
 
     parser: ArgumentParser = create_parser()
     args: Namespace = parser.parse_args(sys.argv[1:])
@@ -29,13 +30,11 @@ def main():
 
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
-        answers: List[ResourceRecord]
-
         resolver: Resolver = Resolver(udp_socket, args.verbose, dns_server_ip)
         if args.ipv6:
-            answers = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV6_TYPE)
+            answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV6_TYPE)
         else:
-            answers = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV4_TYPE)
+            answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server_ip, IPV4_TYPE)
 
         Resolver.print_answers(domain_name, answers)
 
