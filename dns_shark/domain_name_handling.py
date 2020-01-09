@@ -1,8 +1,3 @@
-"""
-Contains functionality that allows domain names to be encoded and decoded according to the
-DNS data compression algorithm.
-"""
-
 from typing import List
 from io import StringIO, BytesIO
 
