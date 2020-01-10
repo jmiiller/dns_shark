@@ -1,6 +1,6 @@
 # DNS Shark
 
-DNS Shark is a simple domain name resolver that is able to perform domain name resolution.
+DNS Shark is a simple domain name resolver.
 
 At the moment, DNS Shark is capable of resolving domain names to either an IPv4 or IPv6 address. In addition, DNS Shark can provide verbose tracing output, if desired.
 
