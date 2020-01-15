@@ -5,6 +5,11 @@ from dns_shark.resource_record import ResourceRecord
 
 
 class Resolver:
+    """
+    This class contains the API for dns shark.
+
+    These are the methods that should be used by any other developer seeking to leverage dns shark in their application.
+    """
 
     @staticmethod
     def ask(domain_name: str, dns_server: str, ipv6: bool = False, verbose: bool = False) -> List[ResourceRecord]:
