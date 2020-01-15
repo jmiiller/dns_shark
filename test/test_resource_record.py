@@ -23,7 +23,10 @@ class DNSMessageTests(unittest.TestCase):
         cls.ipv4_address_data: bytes = Utilities().ipv4_address_data
         cls.ipv6_address_data: bytes = Utilities().ipv6_address_data
 
-        cls.resource_record_encoded: bytes = Utilities.resource_record_encoded
+        cls.resource_record_encoded: bytes = Utilities().resource_record_encoded
+
+        cls.simple_domain_name: bytes = Utilities().simple_domain_name
+        cls.simple_domain_name_encoded: bytes = Utilities().simple_domain_name_encoded
 
     def test_decode_resource_record(self):
         """
@@ -33,7 +36,7 @@ class DNSMessageTests(unittest.TestCase):
                                                                                 BytesIO(self.resource_record_encoded))
 
         self.assertEqual(resource_record.name, 'ca')
-        self.assertEqual(resource_record.type, 2)
+        self.assertEqual(resource_record.type, self.ns_type)
         self.assertEqual(resource_record.response_class, 1)
         self.assertEqual(resource_record.ttl, 150873)
         self.assertEqual(resource_record.rdlength, 14)
@@ -92,4 +95,49 @@ class DNSMessageTests(unittest.TestCase):
         """
         ipv6_address: str = ResourceRecord._decode_ipv6_address(BytesIO(self.ipv6_address_data))
         self.assertEqual(ipv6_address, '1008:2002:1008:2002:1008:2002:1008:2002')
+
+    def test_decode_rdata_a_type(self):
+        """
+        Test case to decode rdata of type a (ipv4).
+        """
+        rdata: BytesIO = BytesIO(self.ipv4_address_data)
+        copy: BytesIO = BytesIO(self.ipv4_address_data)
+        ipv4_address: str = ResourceRecord._decode_rdata(rdata, copy, self.a_type)
+        self.assertEqual(ipv4_address, '16.8.32.2')
+
+    def test_decode_rdata_ns_type(self):
+        """
+        Test case to decode rdata of type ns (name server).
+        """
+        rdata: BytesIO = BytesIO(self.simple_domain_name_encoded)
+        copy: BytesIO = BytesIO(self.simple_domain_name_encoded)
+        decoded_domain_name: str = ResourceRecord._decode_rdata(rdata, copy, self.ns_type)
+        self.assertEqual(decoded_domain_name, self.simple_domain_name)
+
+    def test_decode_rdata_cn_type(self):
+        """
+        Test case to decode rdata of type cn (name server).
+        """
+        rdata: BytesIO = BytesIO(self.simple_domain_name_encoded)
+        copy: BytesIO = BytesIO(self.simple_domain_name_encoded)
+        decoded_domain_name: str = ResourceRecord._decode_rdata(rdata, copy, self.cn_type)
+        self.assertEqual(decoded_domain_name, self.simple_domain_name)
+
+    def test_decode_rdata_aaaa_type(self):
+        """
+        Test case to decode rdata of type aaaa (ipv6).
+        """
+        rdata: BytesIO = BytesIO(self.ipv6_address_data)
+        copy: BytesIO = BytesIO(self.ipv6_address_data)
+        ipv6_address: str = ResourceRecord._decode_rdata(rdata, copy, self.aaaa_type)
+        self.assertEqual(ipv6_address, '1008:2002:1008:2002:1008:2002:1008:2002')
+
+    def test_decode_rdata_unsupported_type(self):
+        """
+        Test case to decode rdata of an unsupported type.
+        """
+        rdata: BytesIO = BytesIO(self.ipv6_address_data)
+        copy: BytesIO = BytesIO(self.ipv6_address_data)
+        ipv6_address: str = ResourceRecord._decode_rdata(rdata, copy, self.unsupported_type)
+        self.assertEqual(ipv6_address, 'UNSUPPORTED RESOURCE RECORD TYPE')
 
