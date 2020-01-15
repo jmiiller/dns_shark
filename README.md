@@ -1,4 +1,5 @@
 # DNS Shark
+[![Build Status](https://travis-ci.com/jmiiller/dns_shark.svg?branch=master)](https://travis-ci.com/jmiiller/dns_shark)
 
 DNS Shark is a simple domain name resolver.
 
@@ -7,6 +8,8 @@ At the moment, DNS Shark is capable of resolving domain names to either an IPv4 
 DNS Shark is currently only able to handle A, AAAA, NS, and CNAME resource record types. Thus, any name resolution process that involves other resource record types is currently unsupported, although I wish to add complete handling of all resource record types in the future.
 
 DNS Shark has full MyPy support built-in (i.e. all of the code has correct type annotations).
+
+Continuous Integration with Travis CI.
 
 ## Installation
 
