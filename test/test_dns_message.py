@@ -23,6 +23,17 @@ class DNSMessageTests(unittest.TestCase):
 
         cls.three_consecutive_resource_records_encoded: bytes = Utilities().three_consecutive_resource_records_encoded
 
+        cls.resource_record_1: ResourceRecord = ResourceRecord("name1", 1, 2, 1234, 4, "1.2.3.4")
+        cls.resource_record_2: ResourceRecord = ResourceRecord("name2", 5, 2, 1234, 1, "a")
+        cls.resource_record_3: ResourceRecord = ResourceRecord("name3", 2, 2, 1234, 1, "a")
+        cls.resource_record_4: ResourceRecord = ResourceRecord("name2", 5, 2, 1234, 1, "a")
+
+        cls.resource_records: List[ResourceRecord] = [cls.resource_record_1,
+                                                      cls.resource_record_2,
+                                                      cls.resource_record_3,
+                                                      cls.resource_record_4]
+
+
     def test_decode_dns_message(self):
         """
         Test case to decode an entire dns message. This dns message contains resource records with pointers.
@@ -291,3 +302,58 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(records[2].rdlength, 13)
         self.assertEqual(records[2].rdata, 'x.z-servers')
 
+    def test_get_matched_answer_records_no_records(self):
+        """
+        Test case to attempt to match on an empty list of records.
+        """
+
+        records: List[ResourceRecord] = DNSMessage.get_matching_answer_records([], "", 1)
+
+        self.assertEqual(len(records), 0)
+
+    def test_get_matched_answer_records_domain_name_mismatch(self):
+        """
+        Test case to attempt to match with a domain name that isn't the name of any record.
+        """
+
+        records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "no-match", 1)
+
+        self.assertEqual(len(records), 0)
+
+    def test_get_matched_answer_records_type_mismatch(self):
+        """
+        Test case to attempt to match with a type that doesn't match any record with a given name.
+        """
+
+        records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "name1", 5)
+
+        self.assertEqual(len(records), 0)
+
+    def test_get_matched_answer_records_single_match(self):
+        """
+        Test case to match with a single answer record that matches the domain name and type.
+        """
+
+        records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "name1", 1)
+
+        self.assertEqual(records, [self.resource_record_1])
+
+    def test_get_matched_answer_records_single_match_different_cases(self):
+        """
+        Test case to match with a single answer record that matches the domain name and type. The searched for domain
+        uses different cases then the case in the matching resource record.
+        """
+
+        records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "NAME1", 1)
+
+        self.assertEqual(records, [self.resource_record_1])
+
+    def test_get_matched_answer_records_multiple_matches(self):
+        """
+        Test case to match with two answer records that matches the domain name and type.
+        """
+
+        records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "name2", 5)
+
+        self.assertEqual(records, [self.resource_record_2,
+                                   self.resource_record_4])

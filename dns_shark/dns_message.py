@@ -263,17 +263,19 @@ class DNSMessage:
         for record in records:
             record.print_record_for_trace()
 
-    def get_answer_records_that_match_domain_name_and_type(self, domain_name: str, type: int) -> List[ResourceRecord]:
+    @staticmethod
+    def get_matching_answer_records(records: List[ResourceRecord], domain_name: str, type: int) -> List[ResourceRecord]:
         """
         Retrieves the answer resource records that contain the supplied domain name and record type.
 
+        :param records: the answer records to search through
         :param domain_name: the domain name used to select from the answer resource records
         :param type: the record type used to select from the answer resource records
         :return:
         """
         results = []
 
-        for record in self.answer_records:
+        for record in records:
             if record.name.lower() == domain_name.lower() and record.type == type:
                 results.append(record)
 

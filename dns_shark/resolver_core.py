@@ -70,8 +70,11 @@ class ResolverCore:
         :return: a list of the answer records that match the desired domain name and type, if present.
         """
 
-        answer_resource_records = dns_response.get_answer_records_that_match_domain_name_and_type(requested_domain_name, requested_type)
-        cname_resource_records = dns_response.get_answer_records_that_match_domain_name_and_type(requested_domain_name, 5)
+        answer_resource_records = dns_response.get_matching_answer_records(dns_response.answer_records,
+                                                                          requested_domain_name,
+                                                                          requested_type)
+        cname_resource_records = dns_response.get_matching_answer_records(dns_response.answer_records,
+                                                                         requested_domain_name, 5)
 
         if answer_resource_records:
             return answer_resource_records
