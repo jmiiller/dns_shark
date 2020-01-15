@@ -3,7 +3,7 @@ from io import BytesIO
 from dns_shark.dns_message import DNSMessage
 from test.utilities import Utilities
 from dns_shark.dns_question import DNSQuestion
-from typing import List
+from typing import List, Optional
 from dns_shark.resource_record import ResourceRecord
 
 
@@ -33,6 +33,15 @@ class DNSMessageTests(unittest.TestCase):
                                                       cls.resource_record_3,
                                                       cls.resource_record_4]
 
+        cls.additional_record_1: ResourceRecord = ResourceRecord("x.ubc.ca", 1, 2, 1234, 4, "1.2.3.4")
+        cls.additional_record_2: ResourceRecord = ResourceRecord("y.ubc.ca", 28, 2, 1234, 16, "1008:2002:1008:2002:1008:2002:1008:2002")
+        cls.additional_record_3: ResourceRecord = ResourceRecord("z.ubc.ca", 1, 2, 1234, 4, "3.4.5.6")
+        cls.additional_record_4: ResourceRecord = ResourceRecord("z.ubc.ca", 1, 2, 1234, 4, "4.5.6.7")
+
+        cls.additional_records: List[ResourceRecord] = [cls.additional_record_1,
+                                                        cls.additional_record_2,
+                                                        cls.additional_record_3,
+                                                        cls.additional_record_4]
 
     def test_decode_dns_message(self):
         """
@@ -357,3 +366,57 @@ class DNSMessageTests(unittest.TestCase):
 
         self.assertEqual(records, [self.resource_record_2,
                                    self.resource_record_4])
+
+    def test_get_name_server_ip_address_helper_no_name_match(self):
+        """
+        Test case to retrieve the ip address for a name server for which there is additional record whose
+        name matches the name server name.
+        """
+
+        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "no-match")
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                     self.additional_records)
+
+        self.assertEqual(name_server_ip, None)
+
+    def test_get_name_server_ip_address_helper_no_type_match(self):
+        """
+        Test case to retrieve the ip address for a name server for which there is an additional record whose
+        name is the name server name, but is of the incorrect type.
+        """
+
+        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "y.ubc.ca")
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                     self.additional_records)
+
+        self.assertEqual(name_server_ip, None)
+
+    def test_get_name_server_ip_address_helper_only_one_match(self):
+        """
+        Test case to retrieve the ip address of a name server for which there is a match of the correct type
+        and there is only one match in the additional records.
+        """
+
+        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "x.ubc.ca")
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                     self.additional_records)
+
+        self.assertEqual(name_server_ip, "1.2.3.4")
+
+    def test_get_name_server_ip_address_helper_multiple_matches(self):
+        """
+        Test case to retrieve the ip address of a name server for which there is a match of the correct type
+        and there are multiple matching records in the additional records. The first match's ip address should be
+        returned.
+        """
+
+        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "z.ubc.ca")
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                     self.additional_records)
+
+        self.assertEqual(name_server_ip, "3.4.5.6")
+
