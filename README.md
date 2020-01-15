@@ -1,6 +1,6 @@
 # DNS Shark
 
-DNS Shark is a simple domain name resolver that is able to perform domain name resolution.
+DNS Shark is a simple domain name resolver.
 
 At the moment, DNS Shark is capable of resolving domain names to either an IPv4 or IPv6 address. In addition, DNS Shark can provide verbose tracing output, if desired.
 
@@ -183,7 +183,7 @@ Answers:
   www.google.com 300   AAAA 2607:f8b0:400a:809::2004
 ```
 
-You can also call DNS Shark in your own Python code, by importing from the resolver package:
+You can also call DNS Shark in your own Python code, by importing from the dns_resolver package:
 
 ```
 >>> from dns_shark.dns_resolver import Resolver
