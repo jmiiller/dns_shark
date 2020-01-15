@@ -185,10 +185,10 @@ class DNSMessageTests(unittest.TestCase):
         """
         Test case to retrieve the rcode field when set to fifteen in the flags.
         """
-        # flags = 0 has rcode = 0
-        get_rcode_value_small: int = DNSMessage._get_rcode_value_from_flags(0)
+        # flags = 15 has rcode = 15
+        get_rcode_value_large: int = DNSMessage._get_rcode_value_from_flags(15)
 
-        self.assertEqual(get_rcode_value_small, 0)
+        self.assertEqual(get_rcode_value_large, 15)
 
     def test_get_rcode_value_from_flags_zero(self):
         """
