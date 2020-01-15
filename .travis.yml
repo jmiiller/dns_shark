@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.8"
+
+# command to install dependencies
+install:
+  - pip install -r stable-req.txt
+
+# command to run tests
+script: python -m unittest discover test
+
+branches:
+  only:
+    - master
