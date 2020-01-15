@@ -1,4 +1,5 @@
 # DNS Shark
+[![Build Status](https://travis-ci.com/jmiiller/dns_shark.svg?branch=master)](https://travis-ci.com/jmiiller/dns_shark)
 
 DNS Shark is a simple domain name resolver.
 
