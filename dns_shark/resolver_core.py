@@ -87,9 +87,10 @@ class ResolverCore:
             ErrorMessages.print_no_matching_ip_address_error()
             return []  # included to make MyPy happy
 
-    def _handle_non_authoritative_response(self, dns_response: DNSMessage,
-                                                 requested_domain_name: str,
-                                                 requested_type: int) -> List[ResourceRecord]:
+    def _handle_non_authoritative_response(self,
+                                           dns_response: DNSMessage,
+                                           requested_domain_name: str,
+                                           requested_type: int) -> List[ResourceRecord]:
         """
         Attempts to find a name server address to send the next name resolution request to.
 
@@ -103,7 +104,8 @@ class ResolverCore:
         :param requested_type: the type of address we wish to resolve the domain name to.
         :return: a list of the answer records that match the desired domain name and type, if present.
         """
-        name_server_ip: Optional[str] = dns_response.get_name_server_ip_address()
+        name_server_ip: Optional[str] = dns_response.get_name_server_ip_address(dns_response.name_server_records,
+                                                                                dns_response.additional_records)
 
         if name_server_ip:  # Response contains an address for one of the name servers, send packet to that server.
             return self.resolve_domain_name(requested_domain_name, name_server_ip, requested_type)

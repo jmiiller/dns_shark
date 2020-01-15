@@ -281,28 +281,32 @@ class DNSMessage:
 
         return results
 
-    def get_name_server_ip_address(self) -> Optional[str]:
+    @staticmethod
+    def get_name_server_ip_address(name_server_records: List[ResourceRecord],
+                                   additional_records: List[ResourceRecord]) -> Optional[str]:
         """
         Retrieves the first available name server ip address.
 
         :return: the name server ip address as a string, if present. Otherwise, return None.
         """
-        for name_server_record in self.name_server_records:
-            name_server_ip: Optional[str] = self.get_name_server_ip_address_from_matching_additional_record(name_server_record)
+        for name_server_record in name_server_records:
+            name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                         additional_records)
 
             if name_server_ip:
                 return name_server_ip
 
         return None
 
-    def get_name_server_ip_address_from_matching_additional_record(self, name_server_record: ResourceRecord) -> Optional[str]:
+    @staticmethod
+    def get_name_server_ip_address_helper(name_server_record: ResourceRecord, additional_records: [ResourceRecord]) -> Optional[str]:
         """
         Given a name server resource record, search the additional records for a corresponding ip address.
 
         :param name_server_record: the name server record whose ip address is being searched for
         :return: the name server ip address, if present. Otherwise, return None.
         """
-        for additional_record in self.additional_records:
+        for additional_record in additional_records:
             if additional_record.name.lower() == name_server_record.rdata.lower() and additional_record.type == 1:
                 return additional_record.rdata
 
