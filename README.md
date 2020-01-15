@@ -8,6 +8,8 @@ DNS Shark is currently only able to handle A, AAAA, NS, and CNAME resource recor
 
 DNS Shark has full MyPy support built-in (i.e. all of the code has correct type annotations).
 
+Continuous Integration with Travis CI.
+
 ## Installation
 
 You can install DNS Shark from [PyPI](https://pypi.org/project/realpython-reader/):
