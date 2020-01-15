@@ -2,6 +2,8 @@ import unittest
 from io import BytesIO
 from dns_shark.dns_message import DNSMessage
 from test.utilities import Utilities
+from dns_shark.dns_question import DNSQuestion
+from typing import List
 
 
 class DNSMessageTests(unittest.TestCase):
@@ -15,6 +17,7 @@ class DNSMessageTests(unittest.TestCase):
         Initialize test values used in the tests.
         """
         cls.dns_message_encoded: bytes = Utilities().dns_message_encoded
+        cls.three_consecutive_dns_questions_encoded: bytes = Utilities().three_consecutive_dns_questions_encoded
 
     def test_decode_dns_message(self):
         """
@@ -208,3 +211,37 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(get_recursion_desired_value, False)
         self.assertEqual(get_recursion_available_value, True)
         self.assertEqual(get_rcode_value, 10)
+
+    def test_read_dns_questions_no_questions(self):
+        """
+        Test case to attempt to decode 0 questions (i.e. don't return anything).
+        """
+        dns_questions: List[DNSQuestion] = DNSMessage._read_dns_questions(BytesIO(self.three_consecutive_dns_questions_encoded),
+                                                                          BytesIO(self.three_consecutive_dns_questions_encoded),
+                                                                          0)
+
+        self.assertEqual(len(dns_questions), 0)
+
+    def test_read_dns_questions(self):
+        """
+        Test case to decode three consecutive dns questions.
+        """
+        dns_questions: List[DNSQuestion] = DNSMessage._read_dns_questions(BytesIO(self.three_consecutive_dns_questions_encoded),
+                                                                          BytesIO(self.three_consecutive_dns_questions_encoded),
+                                                                          3)
+
+        # Check that the first question was properly decoded
+        self.assertEqual(dns_questions[0].name, 'www.cs.ubc.ca')
+        self.assertEqual(dns_questions[0].type, 1)
+        self.assertEqual(dns_questions[0].response_class, 1)
+
+        # Check that the second question was properly decoded
+        self.assertEqual(dns_questions[1].name, 'hello.world.its.me')
+        self.assertEqual(dns_questions[1].type, 2)
+        self.assertEqual(dns_questions[1].response_class, 2)
+
+        # Check that the third question was properly decoded
+        self.assertEqual(dns_questions[2].name, 'oh.hi.there.stranger')
+        self.assertEqual(dns_questions[2].type, 3)
+        self.assertEqual(dns_questions[2].response_class, 3)
+

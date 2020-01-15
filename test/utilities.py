@@ -19,6 +19,10 @@ class Utilities:
 
     dns_question_encoded: bytes = b'\x03www\x02cs\x03ubc\x02ca\x00\x00\x01\x00\x01'
 
+    three_consecutive_dns_questions_encoded: bytes = b'\x03www\x02cs\x03ubc\x02ca\x00\x00\x01\x00\x01' \
+                                                     b'\x05hello\x05world\x03its\x02me\x00\x00\x02\x00\x02' \
+                                                     b'\x02oh\x02hi\x05there\x08stranger\x00\x00\x03\x00\x03'
+
     simple_domain_name: str = "www.cs.ubc.ca"
     simple_domain_name_encoded: bytes = b'\x03\x77\x77\x77\x02\x63\x73\x03\x75\x62\x63\x02\x63\x61\x00'
 
