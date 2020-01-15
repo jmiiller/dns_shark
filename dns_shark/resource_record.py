@@ -79,7 +79,7 @@ class ResourceRecord:
     @staticmethod
     def _decode_ipv6_address(rdata: BytesIO) -> str:
         """
-        Decode the rdata field to an ipv5 address.
+        Decode the rdata field to an ipv6 address.
 
         :param rdata: the redata of the resource record
         :return: the rdata as an ipv6 address string
