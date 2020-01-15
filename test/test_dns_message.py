@@ -313,7 +313,7 @@ class DNSMessageTests(unittest.TestCase):
 
     def test_get_matched_answer_records_no_records(self):
         """
-        Test case to attempt to match on an empty list of records.
+        Test case to match on an empty list of records.
         """
 
         records: List[ResourceRecord] = DNSMessage.get_matching_answer_records([], "", 1)
@@ -322,7 +322,7 @@ class DNSMessageTests(unittest.TestCase):
 
     def test_get_matched_answer_records_domain_name_mismatch(self):
         """
-        Test case to attempt to match with a domain name that isn't the name of any record.
+        Test case to match with a domain name that isn't the name of any record.
         """
 
         records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "no-match", 1)
@@ -331,7 +331,7 @@ class DNSMessageTests(unittest.TestCase):
 
     def test_get_matched_answer_records_type_mismatch(self):
         """
-        Test case to attempt to match with a type that doesn't match any record with a given name.
+        Test case to match with a type that doesn't match any record with a given name.
         """
 
         records: List[ResourceRecord] = DNSMessage.get_matching_answer_records(self.resource_records, "name1", 5)
