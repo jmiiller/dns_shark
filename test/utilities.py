@@ -23,6 +23,12 @@ class Utilities:
                                                      b'\x05hello\x05world\x03its\x02me\x00\x00\x02\x00\x02' \
                                                      b'\x02oh\x02hi\x05there\x08stranger\x00\x00\x03\x00\x03'
 
+    resource_record_encoded: bytes = b'\x02ca\x00\x00\x02\x00\x01\x00\x02MY\x00\x0e\x01x\nca-servers\x00'
+
+    three_consecutive_resource_records_encoded: bytes = b'\x02ca\x00\x00\x02\x00\x01\x00\x02MY\x00\x0e\x01x\nca-servers\x00' \
+                                                        b'\x03ubc\x00\x00\x01\x00\x02\x00\x02MY\x00\x04\x01\x02\x03\x04' \
+                                                        b'\x03tsn\x00\x00\x05\x00\x03\x00\x02MY\x00\x0d\x01x\x09z-servers\x00'
+
     simple_domain_name: str = "www.cs.ubc.ca"
     simple_domain_name_encoded: bytes = b'\x03\x77\x77\x77\x02\x63\x73\x03\x75\x62\x63\x02\x63\x61\x00'
 
@@ -36,5 +42,3 @@ class Utilities:
 
     ipv4_address_data: bytes = b'\x10\x08\x20\x02'
     ipv6_address_data: bytes = b'\x10\x08\x20\x02\x10\x08\x20\x02\x10\x08\x20\x02\x10\x08\x20\x02'
-
-    resource_record_encoded: bytes = b'\x02ca\x00\x00\x02\x00\x01\x00\x02MY\x00\x0e\x01x\nca-servers\x00'

@@ -4,6 +4,7 @@ from dns_shark.dns_message import DNSMessage
 from test.utilities import Utilities
 from dns_shark.dns_question import DNSQuestion
 from typing import List
+from dns_shark.resource_record import ResourceRecord
 
 
 class DNSMessageTests(unittest.TestCase):
@@ -17,7 +18,10 @@ class DNSMessageTests(unittest.TestCase):
         Initialize test values used in the tests.
         """
         cls.dns_message_encoded: bytes = Utilities().dns_message_encoded
+
         cls.three_consecutive_dns_questions_encoded: bytes = Utilities().three_consecutive_dns_questions_encoded
+
+        cls.three_consecutive_resource_records_encoded: bytes = Utilities().three_consecutive_resource_records_encoded
 
     def test_decode_dns_message(self):
         """
@@ -214,7 +218,7 @@ class DNSMessageTests(unittest.TestCase):
 
     def test_read_dns_questions_no_questions(self):
         """
-        Test case to attempt to decode 0 questions (i.e. don't return anything).
+        Test case to attempt to decode 0 questions. In other words, decode nothing and return an empty list.
         """
         dns_questions: List[DNSQuestion] = DNSMessage._read_dns_questions(BytesIO(self.three_consecutive_dns_questions_encoded),
                                                                           BytesIO(self.three_consecutive_dns_questions_encoded),
@@ -244,4 +248,46 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(dns_questions[2].name, 'oh.hi.there.stranger')
         self.assertEqual(dns_questions[2].type, 3)
         self.assertEqual(dns_questions[2].response_class, 3)
+
+    def test_read_resource_questions_no_records(self):
+        """
+        Test case to attempt to decode 0 resource records. In other words, don't decode anything and return an empty list.
+        """
+        records: List[ResourceRecord] = DNSMessage._read_resource_records(BytesIO(self.three_consecutive_resource_records_encoded),
+                                                                          BytesIO(self.three_consecutive_resource_records_encoded),
+                                                                          0)
+
+        self.assertEqual(len(records), 0)
+
+    def test_read_resource_records(self):
+        """
+        Test case to decode three consecutive resource records
+        """
+        records: List[ResourceRecord] = DNSMessage._read_resource_records(BytesIO(self.three_consecutive_resource_records_encoded),
+                                                                          BytesIO(self.three_consecutive_resource_records_encoded),
+                                                                          3)
+
+        # Check that the first name server record was correctly decoded
+        self.assertEqual(records[0].name, 'ca')
+        self.assertEqual(records[0].type, 2)
+        self.assertEqual(records[0].response_class, 1)
+        self.assertEqual(records[0].ttl, 150873)
+        self.assertEqual(records[0].rdlength, 14)
+        self.assertEqual(records[0].rdata, 'x.ca-servers')
+
+        # Check that the first name server record was correctly decoded
+        self.assertEqual(records[1].name, 'ubc')
+        self.assertEqual(records[1].type, 1)
+        self.assertEqual(records[1].response_class, 2)
+        self.assertEqual(records[1].ttl, 150873)
+        self.assertEqual(records[1].rdlength, 4)
+        self.assertEqual(records[1].rdata, '1.2.3.4')
+
+        # Check that the first name server record was correctly decoded
+        self.assertEqual(records[2].name, 'tsn')
+        self.assertEqual(records[2].type, 5)
+        self.assertEqual(records[2].response_class, 3)
+        self.assertEqual(records[2].ttl, 150873)
+        self.assertEqual(records[2].rdlength, 13)
+        self.assertEqual(records[2].rdata, 'x.z-servers')
 
