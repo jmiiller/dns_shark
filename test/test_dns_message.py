@@ -367,6 +367,19 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(records, [self.resource_record_2,
                                    self.resource_record_4])
 
+    def test_get_name_server_ip_address_helper_no_additional_records(self):
+        """
+        Test case to retrieve the ip address for a name server for which there is additional record whose
+        name matches the name server name.
+        """
+
+        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "no-match")
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                     [])
+
+        self.assertEqual(name_server_ip, None)
+
     def test_get_name_server_ip_address_helper_no_name_match(self):
         """
         Test case to retrieve the ip address for a name server for which there is additional record whose
