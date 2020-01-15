@@ -43,6 +43,19 @@ class DNSMessageTests(unittest.TestCase):
                                                         cls.additional_record_3,
                                                         cls.additional_record_4]
 
+        cls.name_server_record_1: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "x.ubc.ca")
+        cls.name_server_record_2: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "z.ubc.ca")
+        cls.name_server_record_3: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "a.ubc.ca")
+
+        cls.name_server_records_list_1: List[ResourceRecord] = [cls.name_server_record_1,
+                                                                cls.name_server_record_3]
+
+        cls.name_server_records_list_2: List[ResourceRecord] = [cls.name_server_record_3]
+
+        cls.name_server_records_list_3: List[ResourceRecord] = [cls.name_server_record_1,
+                                                                cls.name_server_record_2,
+                                                                cls.name_server_record_3]
+
     def test_decode_dns_message(self):
         """
         Test case to decode an entire dns message. This dns message contains resource records with pointers.
@@ -416,6 +429,81 @@ class DNSMessageTests(unittest.TestCase):
 
         name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
                                                                                      self.additional_records)
+
+        self.assertEqual(name_server_ip, "1.2.3.4")
+
+    def test_get_name_server_ip_address_helper_multiple_matches(self):
+        """
+        Test case to retrieve the ip address of a name server for which there is a match of the correct type
+        and there are multiple matching records in the additional records. The first match's ip address should be
+        returned.
+        """
+
+        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "z.ubc.ca")
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
+                                                                                     self.additional_records)
+
+        self.assertEqual(name_server_ip, "3.4.5.6")
+
+    def test_get_name_server_ip_address_no_records(self):
+        """
+        Test case where no records are given.
+        """
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address([],
+                                                                              [])
+
+        self.assertEqual(name_server_ip, None)
+
+    def test_get_name_server_ip_address_no_name_server_records(self):
+        """
+        Test case where no name server records are given.
+        """
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address([],
+                                                                              self.additional_records)
+
+        self.assertEqual(name_server_ip, None)
+
+    def test_get_name_server_ip_address_no_additional_records(self):
+        """
+        Test case where no additional records are given.
+        """
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address(self.name_server_records_list_1,
+                                                                              [])
+
+        self.assertEqual(name_server_ip, None)
+
+    def test_get_name_server_ip_address_no_name_match(self):
+        """
+        Test case where there is no match for any name server record.
+        """
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address(self.name_server_records_list_2,
+                                                                              self.additional_records)
+
+        self.assertEqual(name_server_ip, None)
+
+    def test_get_name_server_ip_address_only_one_match(self):
+        """
+        Test case for where there is only one possible match for any of the name server records.
+        """
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address(self.name_server_records_list_1,
+                                                                              self.additional_records)
+
+        self.assertEqual(name_server_ip, "1.2.3.4")
+
+    def test_get_name_server_ip_address_multiple_matches(self):
+        """
+        Test case to retrieve the ip address of a name server for which there is a match of the correct type
+        and there is only one match in the additional records.
+        """
+
+        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address(self.name_server_records_list_3,
+                                                                              self.additional_records)
 
         self.assertEqual(name_server_ip, "1.2.3.4")
 
