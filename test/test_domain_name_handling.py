@@ -1,6 +1,7 @@
 import unittest
 from dns_shark.domain_name_handling import DomainNameEncoder, DomainNameDecoder
 from io import BytesIO
+from test.utilities import Utilities
 
 
 class DomainNameHandlingTests(unittest.TestCase):
@@ -13,16 +14,16 @@ class DomainNameHandlingTests(unittest.TestCase):
         """
         Initialize test values used in the tests.
         """
-        cls.simple_domain_name: str = "www.cs.ubc.ca"
-        cls.simple_domain_name_encoded: bytes = b'\x03\x77\x77\x77\x02\x63\x73\x03\x75\x62\x63\x02\x63\x61\x00'
+        cls.simple_domain_name: str = Utilities().simple_domain_name
+        cls.simple_domain_name_encoded: bytes = Utilities().simple_domain_name_encoded
 
-        cls.simple_label: str = "ubc"
-        cls.simple_label_encoded: bytes = b'\x03\x75\x62\x63'
+        cls.simple_label: str = Utilities().simple_label
+        cls.simple_label_encoded: bytes = Utilities().simple_label_encoded
 
-        cls.domain_name_with_pointers: str = "www.cbu.cs.ubc.ca"
+        cls.domain_name_with_pointers: str = Utilities().domain_name_with_pointers
         # This encoding has two domain names in it. At the start is www.cs.ubc.ca. After is www.cbu.cs.ubc.ca,
         # which contains a pointer to the first one.
-        cls.domain_name_with_pointers_encoded: bytes = b'\x03www\x02cs\x03ubc\x02ca\x00\x03\x77\x77\x77\x03\x63\x62\x75\xc0\x04'
+        cls.domain_name_with_pointers_encoded: bytes = Utilities().domain_name_with_pointers_encoded
 
     def test_encode_simple_domain_name(self):
         """

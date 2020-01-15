@@ -1,6 +1,7 @@
 import unittest
 from dns_shark.resource_record import ResourceRecord
 from io import BytesIO
+from test.utilities import Utilities
 
 
 class DNSMessageTests(unittest.TestCase):
@@ -19,10 +20,10 @@ class DNSMessageTests(unittest.TestCase):
         cls.aaaa_type: int = 28
         cls.unsupported_type: int = 3
 
-        cls.ipv4_address_data: bytes = b'\x10\x08\x20\x02'
-        cls.ipv6_address_data: bytes = b'\x10\x08\x20\x02\x10\x08\x20\x02\x10\x08\x20\x02\x10\x08\x20\x02'
+        cls.ipv4_address_data: bytes = Utilities().ipv4_address_data
+        cls.ipv6_address_data: bytes = Utilities().ipv6_address_data
 
-        cls.resource_record_encoded: bytes = b'\x02ca\x00\x00\x02\x00\x01\x00\x02MY\x00\x0e\x01x\nca-servers\x00'
+        cls.resource_record_encoded: bytes = Utilities.resource_record_encoded
 
     def test_decode_resource_record(self):
         """

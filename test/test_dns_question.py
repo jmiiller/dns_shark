@@ -1,6 +1,7 @@
 from dns_shark.dns_question import DNSQuestion
 from io import BytesIO
 import unittest
+from test.utilities import Utilities
 
 
 class DNSQuestionTests(unittest.TestCase):
@@ -13,7 +14,7 @@ class DNSQuestionTests(unittest.TestCase):
         """
         Initialize test values used in the tests.
         """
-        cls.dns_question_encoded: bytes = b'\x03www\x02cs\x03ubc\x02ca\x00\x00\x01\x00\x01'
+        cls.dns_question_encoded: bytes = Utilities().dns_question_encoded
 
     def test_decode_dns_question(self):
         """
