@@ -26,5 +26,7 @@ setup(
     packages=["dns_shark"],
     include_package_data=True,
     install_requires=[],
-    entry_points={},
+    entry_points={"console_scripts": [
+            "dns_shark=dns_shark.__main__:main",
+        ]},
 )
