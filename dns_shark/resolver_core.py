@@ -5,6 +5,12 @@ from io import BytesIO
 from typing import List, Optional
 from random import Random
 from dns_shark.error_messages import ErrorMessages
+from dns_shark.errors.dns_format_error import DNSFormatError
+from dns_shark.errors.dns_name_error import DNSNameError
+from dns_shark.errors.dns_not_implemented_error import DNSNotImplementedError
+from dns_shark.errors.dns_server_failure_error import DNSServerFailureError
+from dns_shark.errors.dns_refused_error import DNSRefusedError
+from dns_shark.errors.dns_no_matching_resource_record_error import DNSNoMatchingResourceRecordError
 
 
 class ResolverCore:
@@ -86,8 +92,7 @@ class ResolverCore:
             return self.resolve_domain_name(cname_domain_name, self.starting_dns_server, requested_type)
 
         else:
-            ErrorMessages.print_no_matching_ip_address_error()
-            return []  # included to make MyPy happy
+            raise DNSNoMatchingResourceRecordError("No matching resource record error: an authoritative response was returned for a desired domain name. However, the authoritative response did not contain any resource records that matched the desired type.")
 
     def _handle_non_authoritative_response(self,
                                            dns_response: DNSMessage,
@@ -222,7 +227,16 @@ class ResolverCore:
         :param rcode: the rcode the most recent dns response possessed
         :return: None
         """
-        if rcode != 0:
-            ErrorMessages.print_rcode_error_message(rcode)
+        if rcode == 1:
+            raise DNSFormatError("Format error: the name server was unable to interpret the query.")
+        elif rcode == 2:
+            raise DNSServerFailureError("Server failure: The name server was unable to process this query due to a problem with the name server.")
+        elif rcode == 3:
+            raise DNSNameError("Name Error: the domain name you are attempt to resolve does not exist.")
+        elif rcode == 4:
+            raise DNSNotImplementedError("Not Implemented: The name server does not support the requested kind of query.")
+        elif rcode == 5:
+            raise DNSRefusedError("Refused - The name server refuses to perform the specified operation for policy reasons.")
+
 
 
