@@ -1,5 +1,7 @@
 # DNS Shark
 [![Build Status](https://travis-ci.com/jmiiller/dns_shark.svg?branch=master)](https://travis-ci.com/jmiiller/dns_shark)
+[![codecov](https://codecov.io/gh/jmiiller/dns_shark/branch/master/graph/badge.svg)](https://codecov.io/gh/jmiiller/dns_shark)
+
 
 DNS Shark is a simple domain name resolver.
 
@@ -9,7 +11,7 @@ DNS Shark is currently only able to handle A, AAAA, NS, and CNAME resource recor
 
 DNS Shark has full MyPy support built-in (i.e. all of the code has correct type annotations).
 
-Continuous Integration with Travis CI.
+Continuous Integration with Travis CI. Code coverage tracking with Codecov.
 
 ## Installation
 
