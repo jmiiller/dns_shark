@@ -1,20 +1,9 @@
-# TODO:
-# Add to PyPi  ****
-# Add test coverage for ResourceRecord.py  ****
-# Add test coverage for resource record esque methods in DNSMessage.py
-# Add test coverage for Resolver.py
-# Add wrapper for resolver to provide easy use to others from their own code.
-
-
-
-
-
-from dns_shark.command_line_parsing import create_parser  # type: ignore
+from dns_shark.command_line_parsing import create_parser
 import sys
 from argparse import ArgumentParser, Namespace
-from dns_shark.resource_record import ResourceRecord  # type: ignore
+from dns_shark.resource_record import ResourceRecord
 from typing import List
-from dns_shark.resolver_core import ResolverCore  # type: ignore
+from dns_shark.resolver_core import ResolverCore
 from dns_shark.dns_resolver import Resolver
 
 IPV6_TYPE = 28
