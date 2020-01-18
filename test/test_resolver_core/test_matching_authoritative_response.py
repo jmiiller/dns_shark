@@ -4,9 +4,6 @@ from dns_shark.resolver_core import ResolverCore
 from dns_shark.resource_record import ResourceRecord
 from typing import List
 
-# Other tests:
-# name server, cname, exceptions (errors at the moment)
-
 
 class MatchingAuthoritativeResponseTest(unittest.TestCase):
     """
