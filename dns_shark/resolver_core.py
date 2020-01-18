@@ -156,7 +156,7 @@ class ResolverCore:
         :return: the dns response that has been received, successfully decoded, and has the correct query_id and is_
         response value.
         """
-        received_data = self.udp_socket.recv(1024)
+        received_data: bytes = self.udp_socket.recv(1024)
         received_dns_message: DNSMessage = DNSMessage.decode_dns_message(BytesIO(received_data))
 
         if (received_dns_message.query_id != expected_query_id) or not received_dns_message.is_response:
