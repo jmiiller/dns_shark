@@ -3,7 +3,7 @@ from dns_shark.dns_message import DNSMessage
 from dns_shark.resource_record import ResourceRecord
 from io import BytesIO
 from typing import List, Optional
-from random import randint
+from random import Random
 from dns_shark.error_messages import ErrorMessages
 
 
@@ -18,13 +18,15 @@ class ResolverCore:
         starting_dns_server: the dns server that the name resolution search begins with
         counter: the maximum number of requests allowed for a single domain name resolution.
                  Used to exit from infinite loops.
+        random: a random number generator used for choosing query ids
     """
 
-    def __init__(self, sock, verbose: bool, starting_dns_server: str):
+    def __init__(self, sock, verbose: bool, starting_dns_server: str, random: Random):
         self.udp_socket = sock
         self.verbose: bool = verbose
         self.starting_dns_server: str = starting_dns_server
         self.counter: int = 30
+        self.random: Random = random
 
     def resolve_domain_name(self, requested_domain_name: str,
                             next_dns_server_ip: str,
@@ -133,7 +135,7 @@ class ResolverCore:
         :param requested_type: the type of address we wish to resolve the domain name to.
         :return: the dns response from the next_dns_server_ip.
         """
-        random_query_id: int = randint(0, 65535)
+        random_query_id: int = self.random.randint(0, 65535)
 
         domain_name_query: BytesIO = DNSMessageUtilities.create_domain_name_query(requested_domain_name,
                                                                                   random_query_id,

@@ -2,6 +2,7 @@ import socket
 from dns_shark.resolver_core import ResolverCore
 from typing import List
 from dns_shark.resource_record import ResourceRecord
+from random import Random
 
 
 class Resolver:
@@ -27,7 +28,7 @@ class Resolver:
 
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
-            resolver: ResolverCore = ResolverCore(udp_socket, verbose, dns_server)
+            resolver: ResolverCore = ResolverCore(udp_socket, verbose, dns_server, Random())
             if ipv6:
                 answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server, 28)
                 return answers
