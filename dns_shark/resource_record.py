@@ -27,6 +27,15 @@ class ResourceRecord:
         self.rdlength: int = rdlength
         self.rdata: str = rdata
 
+    def __eq__(self, other: 'ResourceRecord'):
+        if isinstance(other, ResourceRecord):
+            return self.name == other.name and \
+                   self.type == other.type and \
+                   self.response_class == other.response_class and \
+                   self.ttl == other.ttl and \
+                   self.rdlength == other.rdlength and \
+                   self.rdata == other.rdata
+
     @staticmethod
     def decode_resource_record(data: BytesIO, copy_of_message: BytesIO) -> 'ResourceRecord':
         """
