@@ -29,10 +29,8 @@ class Resolver:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
             resolver: ResolverCore = ResolverCore(udp_socket, verbose, dns_server, Random())
-            if ipv6:
-                answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server, 28)
-                return answers
-            else:
-                answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server, 1)
-                return answers
+            type = 1 if ipv6 else 28
+
+            answers: List[ResourceRecord] = resolver.resolve_domain_name(domain_name, dns_server, type)
+            return answers
 
