@@ -36,6 +36,10 @@ class ResourceRecord:
                    self.rdlength == other.rdlength and \
                    self.rdata == other.rdata
 
+    def __repr__(self):
+        return 'name: ' + str(self.name) + ', type: ' + str(self.type) + ', class: ' + str(self.response_class) + \
+               ', ttl: ' + str(self.ttl) + ', rdlength: ' + str(self.rdlength) + ', rdata: ' + str(self.rdata)
+
     @staticmethod
     def decode_resource_record(data: BytesIO, copy_of_message: BytesIO) -> 'ResourceRecord':
         """
