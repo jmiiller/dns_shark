@@ -23,6 +23,8 @@ class Resolver:
         :param dns_server: the dns server ipv4 address that the name resolution process will begin with
         :param ipv6: a boolean flag indicating whether you want to find an ipv6 address for the domain name
         :param verbose: a boolean flag indicating whether you want verbose output for the name resolution process
+        :raises: DNSFormatError, DNSServerFailureError, DNSNameError, DNSNotImplementedError, DNSRefusedError,
+                 DNSZeroCounterError, DNSNoMatchingResourceRecordError
         :return: a list of the resource records the domain name resolved to
         """
 

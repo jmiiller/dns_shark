@@ -44,6 +44,8 @@ class ResolverCore:
         :param requested_domain_name: the domain name we wish to resolve.
         :param next_dns_server_ip: the starting dns server which we use in the name resolution process.
         :param requested_type: the desired resource record type we seek to resolve the domain name to.
+        :raises: DNSFormatError, DNSServerFailureError, DNSNameError, DNSNotImplementedError, DNSRefusedError,
+                 DNSZeroCounterError, DNSNoMatchingResourceRecordError
         :return: a list of the answer records that match the desired domain name and type, if present.
         """
 
@@ -75,6 +77,7 @@ class ResolverCore:
         :param dns_response: the most recently received dns response in the name resolution process.
         :param requested_domain_name: the domain name we wish to resolve.
         :param requested_type: the type of address we wish to resolve the domain name to.
+        :raises: DNSNoMatchingResourceRecordError
         :return: a list of the answer records that match the desired domain name and type, if present.
         """
 
@@ -224,9 +227,11 @@ class ResolverCore:
     @staticmethod
     def _check_rcode(rcode: int) -> None:
         """
-        If rcode is non-zero, then print the appropriate rcode error message and exit.
+        If rcode is non-zero, then raise the appropriate error.
 
         :param rcode: the rcode the most recent dns response possessed
+
+        :raises: DNSFormatError, DNSServerFailureError, DNSNameError, DNSNotImplementedError, DNSRefusedError
         :return: None
         """
         if rcode == 1:
