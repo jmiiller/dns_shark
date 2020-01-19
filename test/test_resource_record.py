@@ -187,3 +187,84 @@ class DNSMessageTests(unittest.TestCase):
         self.assertEqual(buffer.getvalue(), "ResourceRecord(name: record, type: 1, class: 1, "
                                             "ttl: 600, rdlength: 4, rdata: 1.2.3.4)\n")
 
+    def test_resource_record_equal(self):
+        """
+        Test case for comparing two equal resource records.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+
+        self.assertTrue(record1 == record2)
+
+    def test_resource_record_not_equal_name(self):
+        """
+        Test case for comparing two resource records with different names.
+        """
+
+        record1: ResourceRecord = ResourceRecord("name1", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("name2", 1, 1, 600, 4, "1.2.3.4")
+
+        self.assertTrue(record1 != record2)
+
+    def test_resource_record_not_equal_type(self):
+        """
+        Test case for comparing two resource records with different types.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("record", 1000, 1, 600, 4, "1.2.3.4")
+
+        self.assertTrue(record1 != record2)
+
+    def test_resource_record_not_equal_class(self):
+        """
+        Test case for comparing two resource records with different classes.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("record", 1, 200, 600, 4, "1.2.3.4")
+
+        self.assertTrue(record1 != record2)
+
+    def test_resource_record_not_equal_ttl(self):
+        """
+        Test case for comparing two resource records with different ttls.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("record", 1, 1, 100, 4, "1.2.3.4")
+
+        self.assertTrue(record1 != record2)
+
+    def test_resource_record_not_equal_rdlength(self):
+        """
+        Test case for comparing two resource records with different rdlengths.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("record", 1, 1, 600, 16, "1.2.3.4")
+
+        self.assertTrue(record1 != record2)
+
+    def test_resource_record_not_equal_rdata(self):
+        """
+        Test case for comparing two resource records with different rdata.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+        record2: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "6.5.3.1")
+
+        self.assertTrue(record1 != record2)
+
+    def test_resource_record_not_equal_different_object_type(self):
+        """
+        Test case for comparing two resource records with different rdata.
+        """
+
+        record1: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+
+        self.assertTrue(record1 != "string value")
+
+
+
