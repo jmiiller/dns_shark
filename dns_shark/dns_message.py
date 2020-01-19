@@ -299,11 +299,13 @@ class DNSMessage:
         return None
 
     @staticmethod
-    def get_name_server_ip_address_helper(name_server_record: ResourceRecord, additional_records: [ResourceRecord]) -> Optional[str]:
+    def get_name_server_ip_address_helper(name_server_record: ResourceRecord,
+                                          additional_records: List[ResourceRecord]) -> Optional[str]:
         """
         Given a name server resource record, search the additional records for a corresponding ip address.
 
         :param name_server_record: the name server record whose ip address is being searched for
+        :param additional_records: the records we are searching for the ip address in
         :return: the name server ip address, if present. Otherwise, return None.
         """
         for additional_record in additional_records:
