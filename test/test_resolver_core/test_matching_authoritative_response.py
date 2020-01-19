@@ -27,7 +27,7 @@ class MatchingAuthoritativeResponseTest(unittest.TestCase):
 
         cls.mock_random: Mock = Mock(**{'randint.return_value': 6582})
 
-    def test_matching_authoritative_response_on_first_query(self):
+    def test_matching_authoritative_response(self):
         """
         Test case for when the first response given by the queried dns name server is an authoritative response with
         a matching resource record type.
