@@ -5,6 +5,8 @@ from test.utilities import Utilities
 from dns_shark.dns_question import DNSQuestion
 from typing import List, Optional
 from dns_shark.resource_record import ResourceRecord
+from contextlib import redirect_stdout
+from io import StringIO
 
 
 class DNSMessageTests(unittest.TestCase):
@@ -506,5 +508,78 @@ class DNSMessageTests(unittest.TestCase):
                                                                               self.additional_records)
 
         self.assertEqual(name_server_ip, "1.2.3.4")
+
+    def test_print_dns_query(self):
+        """
+        Test case for printing a dns query to stdout.
+        """
+
+        message: DNSMessage = DNSMessage(1,
+                                         True,
+                                         1,
+                                         True,
+                                         True,
+                                         True,
+                                         True,
+                                         1,
+                                         1,
+                                         1,
+                                         2,
+                                         3,
+                                         [DNSQuestion("question", 1, 1)],
+                                         [ResourceRecord("record1", 10, 11, 12, 4, "1.2.3.4")],
+                                         [ResourceRecord("record1", 10, 11, 12, 4, "1.2.3.4"),
+                                          ResourceRecord("record2", 15, 16, 17, 4, "5.6.7.8")],
+                                         [ResourceRecord("record1", 10, 11, 12, 4, "1.2.3.4"),
+                                          ResourceRecord("record2", 15, 16, 17, 4, "5.6.7.8"),
+                                          ResourceRecord("record3", 18, 19, 20, 4, "9.10.11.12")])
+
+        buffer: StringIO = StringIO()
+
+        with redirect_stdout(buffer):
+            message.print_dns_query("255.255.255.255")
+
+        self.assertEqual(buffer.getvalue(), "Query ID:    1 question  A --> 255.255.255.255\n")
+
+    def test_print_dns_response(self):
+        """
+        Test case for printing dns responses to stdout.
+        """
+
+        message: DNSMessage = DNSMessage(  1,
+                                           True,
+                                           1,
+                                           True,
+                                           True,
+                                           True,
+                                           True,
+                                           1,
+                                           1,
+                                           1,
+                                           2,
+                                           3,
+                                           [DNSQuestion("question", 1, 1)],
+                                           [ResourceRecord("record1", 10, 11, 12, 4, "1.2.3.4")],
+                                           [ResourceRecord("record1", 10, 11, 12, 4, "1.2.3.4"),
+                                            ResourceRecord("record2", 15, 16, 17, 4, "5.6.7.8")],
+                                           [ResourceRecord("record1", 10, 11, 12, 4, "1.2.3.4"),
+                                            ResourceRecord("record2", 15, 16, 17, 4, "5.6.7.8"),
+                                            ResourceRecord("record3", 18, 19, 20, 4, "9.10.11.12")])
+
+        buffer: StringIO = StringIO()
+
+        with redirect_stdout(buffer):
+            message.print_dns_response()
+
+        self.assertEqual(buffer.getvalue(), "Response ID: 1 Authoritative = True\n"
+                                            "  Answers (1)\n"
+                                            "      record1                        12         10   1.2.3.4\n"
+                                            "  Name Servers (2)\n"
+                                            "      record1                        12         10   1.2.3.4\n"
+                                            "      record2                        17         15   5.6.7.8\n"
+                                            "  Additional Information (3)\n"
+                                            "      record1                        12         10   1.2.3.4\n"
+                                            "      record2                        17         15   5.6.7.8\n"
+                                            "      record3                        20         18   9.10.11.12\n")
 
 
