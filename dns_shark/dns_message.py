@@ -219,7 +219,7 @@ class DNSMessage:
 
         return list_of_records
 
-    def print_dns_question(self, dns_server_ip: str) -> None:
+    def print_dns_query(self, dns_server_ip: str) -> None:
         """
         Print a dns query message.
 
