@@ -4,13 +4,13 @@ from dns_shark.resource_record import ResourceRecord
 from io import BytesIO
 from typing import List, Optional
 from random import Random
-from dns_shark.error_messages import ErrorMessages
 from dns_shark.errors.dns_format_error import DNSFormatError
 from dns_shark.errors.dns_name_error import DNSNameError
 from dns_shark.errors.dns_not_implemented_error import DNSNotImplementedError
 from dns_shark.errors.dns_server_failure_error import DNSServerFailureError
 from dns_shark.errors.dns_refused_error import DNSRefusedError
 from dns_shark.errors.dns_no_matching_resource_record_error import DNSNoMatchingResourceRecordError
+from dns_shark.errors.dns_zero_counter_error import DNSZeroCounterError
 
 
 class ResolverCore:
@@ -27,11 +27,11 @@ class ResolverCore:
         random: a random number generator used for choosing query ids
     """
 
-    def __init__(self, sock, verbose: bool, starting_dns_server: str, random: Random):
+    def __init__(self, sock, verbose: bool, starting_dns_server: str, random: Random, counter: int = 30):
         self.udp_socket = sock
         self.verbose: bool = verbose
         self.starting_dns_server: str = starting_dns_server
-        self.counter: int = 30
+        self.counter: int = counter
         self.random: Random = random
 
     def resolve_domain_name(self, requested_domain_name: str,
@@ -212,12 +212,14 @@ class ResolverCore:
 
     def _check_counter(self) -> None:
         """
-        If the resolver's counter is zero, then print the zero counter error and exit.
+        If the resolver's counter is zero, then raise a DNSZeroCounterError
 
+        :raises: DNSZeroCounterError
         :return: None
         """
         if self.counter == 0:
-            ErrorMessages.print_zero_counter_error()
+            raise DNSZeroCounterError('Too many queries error: there appears to be '
+                                      'a loop in resolving this domain name.')
 
     @staticmethod
     def _check_rcode(rcode: int) -> None:

@@ -11,6 +11,7 @@ from dns_shark.errors.dns_not_implemented_error import DNSNotImplementedError
 from dns_shark.errors.dns_server_failure_error import DNSServerFailureError
 from dns_shark.errors.dns_refused_error import DNSRefusedError
 from dns_shark.errors.dns_no_matching_resource_record_error import DNSNoMatchingResourceRecordError
+from dns_shark.errors.dns_zero_counter_error import DNSZeroCounterError
 
 
 def main(domain_name: str, dns_server_ip: str, ipv6: bool, verbose: bool):
@@ -33,6 +34,9 @@ def main(domain_name: str, dns_server_ip: str, ipv6: bool, verbose: bool):
         print("")
         print(e)
     except DNSNoMatchingResourceRecordError as e:
+        print("")
+        print(e)
+    except DNSZeroCounterError as e:
         print("")
         print(e)
     else:
