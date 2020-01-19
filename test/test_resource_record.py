@@ -1,7 +1,8 @@
 import unittest
 from dns_shark.resource_record import ResourceRecord
-from io import BytesIO
+from io import BytesIO, StringIO
 from test.utilities import Utilities
+from contextlib import redirect_stdout
 
 
 class DNSMessageTests(unittest.TestCase):
@@ -140,4 +141,49 @@ class DNSMessageTests(unittest.TestCase):
         copy: BytesIO = BytesIO(self.ipv6_address_data)
         ipv6_address: str = ResourceRecord._decode_rdata(rdata, copy, self.unsupported_type)
         self.assertEqual(ipv6_address, 'UNSUPPORTED RESOURCE RECORD TYPE')
+
+    def test_print_record_for_trace(self):
+        """
+        Test case for printing resource records for the tracing
+        """
+
+        record: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+
+        buffer: StringIO = StringIO()
+
+        with redirect_stdout(buffer):
+            record.print_record_for_trace()
+
+        self.assertEqual(buffer.getvalue(), "      record                         600        A    1.2.3.4\n")
+
+    def test_print_record_with_supplied_domain_name(self):
+        """
+        Test case for printing resource records with a supplied domain name to be included in the message. (Used when
+        printing the answers of the resolver. We supply the original domain name that was searched for to clearly
+        indicate to the user that the records we have found are for the domain name they initially searched for.)
+        """
+
+        record: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+
+        buffer: StringIO = StringIO()
+
+        with redirect_stdout(buffer):
+            record.print_record_with_supplied_domain_name("the original domain name")
+
+        self.assertEqual(buffer.getvalue(), "  the original domain name 600   A 1.2.3.4\n")
+
+    def test_resource_record_print(self):
+        """
+        Test case for printing a resource record using print(), which calls __repr__().
+        """
+
+        record: ResourceRecord = ResourceRecord("record", 1, 1, 600, 4, "1.2.3.4")
+
+        buffer: StringIO = StringIO()
+
+        with redirect_stdout(buffer):
+            print(record)
+
+        self.assertEqual(buffer.getvalue(), "ResourceRecord(name: record, type: 1, class: 1, "
+                                            "ttl: 600, rdlength: 4, rdata: 1.2.3.4)\n")
 
