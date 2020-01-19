@@ -507,17 +507,4 @@ class DNSMessageTests(unittest.TestCase):
 
         self.assertEqual(name_server_ip, "1.2.3.4")
 
-    def test_get_name_server_ip_address_helper_multiple_matches(self):
-        """
-        Test case to retrieve the ip address of a name server for which there is a match of the correct type
-        and there are multiple matching records in the additional records. The first match's ip address should be
-        returned.
-        """
-
-        name_server_record: ResourceRecord = ResourceRecord("ca", 2, 1, 172800, 8, "z.ubc.ca")
-
-        name_server_ip: Optional[str] = DNSMessage.get_name_server_ip_address_helper(name_server_record,
-                                                                                     self.additional_records)
-
-        self.assertEqual(name_server_ip, "3.4.5.6")
 
