@@ -1,5 +1,7 @@
 import unittest
 from dns_shark.command_line_parsing import create_parser
+from contextlib import redirect_stderr
+from io import StringIO
 
 
 class CommandLineParsingTests(unittest.TestCase):
@@ -9,18 +11,21 @@ class CommandLineParsingTests(unittest.TestCase):
 
     def setUp(self):
         self.parser = create_parser()
+        self.buffer = StringIO()
 
     def test_no_args_provided(self):
         """
         Test case for when no arguments are supplied.
         """
-        self.assertRaises(SystemExit, self.parser.parse_args, [])
+        with redirect_stderr(self.buffer):
+            self.assertRaises(SystemExit, self.parser.parse_args, [])
 
     def test_one_arg_provided(self):
         """
         Test case for when only one argument is supplied.
         """
-        self.assertRaises(SystemExit, self.parser.parse_args, ["127.0.0.1"])
+        with redirect_stderr(self.buffer):
+            self.assertRaises(SystemExit, self.parser.parse_args, ["127.0.0.1"])
 
     def test_only_required_args_given(self):
         """
