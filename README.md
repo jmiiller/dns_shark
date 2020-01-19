@@ -3,6 +3,8 @@
 [![codecov](https://codecov.io/gh/jmiiller/dns_shark/branch/master/graph/badge.svg)](https://codecov.io/gh/jmiiller/dns_shark)
 
 
+
+
 DNS Shark is a simple domain name resolver.
 
 At the moment, DNS Shark is capable of resolving domain names to either an IPv4 or IPv6 address. In addition, DNS Shark can provide verbose tracing output, if desired.
