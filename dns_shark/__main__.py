@@ -14,10 +14,10 @@ from dns_shark.errors.dns_no_matching_resource_record_error import DNSNoMatching
 from dns_shark.errors.dns_zero_counter_error import DNSZeroCounterError
 
 
-def main(domain_name: str, dns_server_ip: str, ipv6: bool, verbose: bool):
+def main(resolver: Resolver, domain_name: str, dns_server_ip: str, ipv6: bool, verbose: bool):
 
     try:
-        answers: List[ResourceRecord] = Resolver.ask(domain_name, dns_server_ip, ipv6, verbose)
+        answers: List[ResourceRecord] = resolver.ask(domain_name, dns_server_ip, ipv6, verbose)
     except DNSFormatError as e:
         print("")
         print(e)
@@ -50,6 +50,6 @@ if __name__ == '__main__':
     dns_server_ip: str = args.dns_server_ip.pop()
     domain_name: str = args.domain_name.pop()
 
-    main(domain_name, dns_server_ip, args.ipv6 is not None, args.verbose is not None)
+    main(Resolver(), domain_name, dns_server_ip, args.ipv6 is not None, args.verbose is not None)
 
     exit(0)
