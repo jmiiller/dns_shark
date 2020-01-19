@@ -43,7 +43,6 @@ class NameServerResponseThenAuthoritativeResponseTest(unittest.TestCase):
                                                    '00010002a3000004d8ef240ac062001c00010002a30000102001486048020038'
                                                    '000000000000000ac062000100010002a3000004d8ef260a')
 
-
         cls.authoritative_response: bytes = bytes.fromhex('0a7b840000010001000000000377777706676f6f676c6503636f6d000'
                                                           '0010001c00c000100010000012c0004acd90ec4')
 
