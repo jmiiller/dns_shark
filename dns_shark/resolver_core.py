@@ -170,7 +170,7 @@ class ResolverCore:
         received_dns_message: DNSMessage = DNSMessage.decode_dns_message(BytesIO(received_data))
 
         if (received_dns_message.query_id != expected_query_id) or not received_dns_message.is_response:
-            self._receive_dns_message(expected_query_id)
+            received_dns_message = self._receive_dns_message(expected_query_id)
 
         return received_dns_message
 
