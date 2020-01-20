@@ -29,4 +29,6 @@ deploy:
   password:
     secure: $PYPI
   on:
+    branch: master
+    python: "3.8"
     tags: true
