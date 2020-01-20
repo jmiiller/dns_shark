@@ -4,10 +4,6 @@ python:
   - "3.7"
   - "3.8"
 
-branches:
-  only:
-    - master
-
 before_install:
   - python --version
   - pip install -U pip
