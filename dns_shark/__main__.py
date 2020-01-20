@@ -30,25 +30,13 @@ def main_helper(resolver: Resolver, domain_name: str, dns_server_ip: str, ipv6: 
 
     try:
         answers: List[ResourceRecord] = resolver.ask(domain_name, dns_server_ip, ipv6, verbose)
-    except DNSFormatError as e:
-        print("")
-        print(e)
-    except DNSNameError as e:
-        print("")
-        print(e)
-    except DNSNotImplementedError as e:
-        print("")
-        print(e)
-    except DNSServerFailureError as e:
-        print("")
-        print(e)
-    except DNSRefusedError as e:
-        print("")
-        print(e)
-    except DNSNoMatchingResourceRecordError as e:
-        print("")
-        print(e)
-    except DNSZeroCounterError as e:
+    except (DNSFormatError,
+            DNSNameError,
+            DNSNotImplementedError,
+            DNSServerFailureError,
+            DNSRefusedError,
+            DNSNoMatchingResourceRecordError,
+            DNSZeroCounterError) as e:
         print("")
         print(e)
     else:
