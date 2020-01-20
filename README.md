@@ -1,12 +1,12 @@
 # DNS Shark
 [![Build Status](https://travis-ci.com/jmiiller/dns_shark.svg?branch=master)](https://travis-ci.com/jmiiller/dns_shark)
 [![codecov](https://codecov.io/gh/jmiiller/dns_shark/branch/master/graph/badge.svg)](https://codecov.io/gh/jmiiller/dns_shark)
-[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![PyPI status](https://img.shields.io/pypi/status/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![PyPI download total](https://img.shields.io/pypi/dt/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
+[![PyPI status](https://img.shields.io/pypi/status/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
+[![PyPI download total](https://img.shields.io/pypi/dt/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
 
 ## Python Versions Supported
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
 
 DNS Shark is a simple domain name resolver.
 
