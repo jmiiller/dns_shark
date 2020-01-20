@@ -14,7 +14,19 @@ from dns_shark.errors.dns_no_matching_resource_record_error import DNSNoMatching
 from dns_shark.errors.dns_zero_counter_error import DNSZeroCounterError
 
 
-def main(resolver: Resolver, domain_name: str, dns_server_ip: str, ipv6: bool, verbose: bool):
+def main():
+    parser: ArgumentParser = create_parser()
+    args: Namespace = parser.parse_args(sys.argv[1:])
+
+    dns_server_ip: str = args.dns_server_ip.pop()
+    domain_name: str = args.domain_name.pop()
+
+    main_helper(Resolver(), domain_name, dns_server_ip, args.ipv6 is not None, args.verbose is not None)
+
+    exit(0)
+
+
+def main_helper(resolver: Resolver, domain_name: str, dns_server_ip: str, ipv6: bool, verbose: bool):
 
     try:
         answers: List[ResourceRecord] = resolver.ask(domain_name, dns_server_ip, ipv6, verbose)
@@ -44,12 +56,4 @@ def main(resolver: Resolver, domain_name: str, dns_server_ip: str, ipv6: bool, v
 
 
 if __name__ == '__main__':
-    parser: ArgumentParser = create_parser()
-    args: Namespace = parser.parse_args(sys.argv[1:])
-
-    dns_server_ip: str = args.dns_server_ip.pop()
-    domain_name: str = args.domain_name.pop()
-
-    main(Resolver(), domain_name, dns_server_ip, args.ipv6 is not None, args.verbose is not None)
-
-    exit(0)
+    main()
