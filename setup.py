@@ -20,7 +20,12 @@ setup(
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3",
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "Topic :: Internet :: Name Service (DNS)",
+        "Topic :: Software Development :: Version Control :: Git",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
     packages=["dns_shark"],
