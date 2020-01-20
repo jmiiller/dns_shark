@@ -13,11 +13,9 @@ before_install:
   - pip install -U pip
   - pip install codecov
 
-# command to install dependencies
 install:
   - pip install -r stable-req.txt
 
-# command to run tests
 script:
   - mypy dns_shark
   - mypy test
@@ -26,3 +24,10 @@ script:
 after_success:
   - codecov
 
+deploy:
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: "LTPKNv/hSRXfeuzYDoXgtRfSZClle4BowdgwYXu2K0OMqzgG/Gmg0d8/UcIynToxVU7cldTtAHSen//quW+ndqLaVCBrak8iqKyDJ62TNr7wiZdcSj4hOIBf9ZFbENi9nFnVm9MsjY7jCpEGtFIEh30noX9lQM5dAgI3XuMP5GGZRrqKnpd9Hq4FuTZW/NcYPCvFRbtaNGDFJVc1/fSxao63s+pC1cKu2nBJbzLD6cBSIkc02y0rTamp0+lLYvK/JSmMPRKFHbEsTRNVGezvSsMWIpnAsdjdUXf4gz2505snB8CDAnUM16gtKgzy1DSo9WvgJSKVDJ7Zvg5uI8QJkyikGc4BzopXchYbr2w2o75sSdIWClnZo/XevNUE//Ye4SsnC387BuY5Nxz1PYFRBlw/e4+3Em+7OqlOJSFX0EugJqfWWT+t3bli1QjXZFSRNFpik1jtHIfXi8LjQtoDugD0PAv9c3rq0bxvnmho36/0bPpJ37eWIiXztaIq1PkkJjnNU/XlxRjQQyUaNPzJLbttNHkkflZ4kBtDCRsV+KAH30bZ74lxdkgZ9Nlrw0PUaiw8Sz1zy8tjxNOwnN7sdgDhY4u20DmbMqUfKzIcLz8C8Q93Va3Tz0EbKzSygDL3Fl1sWslZGtgI/JqgLTXu3CiW7V9kxKt+e4QMLwluxYk="
+  on:
+    tags: true
