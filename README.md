@@ -24,7 +24,7 @@ You can install DNS Shark from [PyPI](https://pypi.org/project/realpython-reader
 pip install dns_shark
 ```
 
-DNS Shark is supported on Python 3.8 and above.
+DNS Shark is supported on Python 3.6 and above.
 
 ## How to use
 
@@ -195,6 +195,7 @@ You can also call DNS Shark in your own Python code, by importing from the dns_r
 
 ```
 >>> from dns_shark.dns_resolver import Resolver
->>> Resolver.ask('www.google.com', '199.7.83.42')
-[<dns_shark.resource_record.ResourceRecord object at 0x109d06790>]   <<< a list of the resource records returned from the name resolution process
+>>> records = Resolver.ask('www.google.com', '199.7.83.42')
+>>> print(records)
+[ResourceRecord(name: www.google.com, type: 1, class: 1, ttl: 300, rdlength: 4, rdata: 172.217.3.196)]
 ```
