@@ -1,9 +1,8 @@
 # DNS Shark
-[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![Build Status](https://travis-ci.com/jmiiller/dns_shark.svg?branch=master)](https://travis-ci.com/jmiiller/dns_shark)
 [![codecov](https://codecov.io/gh/jmiiller/dns_shark/branch/master/graph/badge.svg)](https://codecov.io/gh/jmiiller/dns_shark)
-
-
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dns-shark)
+![PyPI](https://img.shields.io/pypi/v/dns-shark)
 
 
 DNS Shark is a simple domain name resolver.
@@ -22,6 +21,10 @@ You can install DNS Shark from [PyPI](https://pypi.org/project/realpython-reader
 
 ```
 pip install dns_shark
+
+or 
+
+pip install dns-shark
 ```
 
 DNS Shark is supported on Python 3.6 and above.
