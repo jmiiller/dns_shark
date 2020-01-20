@@ -21,6 +21,10 @@ You can install DNS Shark from [PyPI](https://pypi.org/project/realpython-reader
 
 ```
 pip install dns_shark
+
+or 
+
+pip install dns-shark
 ```
 
 DNS Shark is supported on Python 3.6 and above.
