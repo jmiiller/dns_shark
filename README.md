@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/jmiiller/dns_shark/branch/master/graph/badge.svg)](https://codecov.io/gh/jmiiller/dns_shark)
 [![PyPI version fury.io](https://badge.fury.io/py/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
 [![PyPI status](https://img.shields.io/pypi/status/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
-[![PyPI download total](https://img.shields.io/pypi/dt/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
+[![PyPI download month](https://img.shields.io/pypi/dm/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
 
 ## Python Versions Supported
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.org/project/dns-shark/)
