@@ -17,7 +17,7 @@ Continuous Integration with Travis CI. Code coverage tracking with Codecov.
 
 ## Installation
 
-You can install DNS Shark from [PyPI](https://pypi.org/project/realpython-reader/):
+You can install DNS Shark from [PyPI](https://pypi.org/project/dns-shark/):
 
 ```
 pip install dns_shark
