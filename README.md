@@ -31,7 +31,7 @@ DNS Shark is supported on Python 3.6 and above.
 
 ## How to use
 
-DNS Shark is a command line application, named `dns_shark`. 
+DNS Shark can be used in two distinct ways. Firstly, DNS Shark can be used as a command line application, named `dns_shark`. Secondly, DNS Shark can be imported into your own project and interacted with via the developer API defined in the `Resolver` class, which is imported from `dns_shark.dns_resolver`.
 
 To resolve a domain name, call the program with two required arguments:
 1. The IP address of a DNS server. (The domain name resolution process will begin with this specified DNS server.)
