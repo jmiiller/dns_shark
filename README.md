@@ -5,7 +5,7 @@
 ![PyPI](https://img.shields.io/pypi/v/dns-shark)
 
 
-DNS Shark is a simple domain name resolver.
+DNS Shark is a domain name resolver.
 
 At the moment, DNS Shark is capable of resolving domain names to either an IPv4 or IPv6 address. In addition, DNS Shark can provide verbose tracing output, if desired.
 
