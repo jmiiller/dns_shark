@@ -11,7 +11,7 @@ At the moment, DNS Shark is capable of resolving domain names to either an IPv4 
 
 DNS Shark is currently only able to handle A, AAAA, NS, and CNAME resource record types. Thus, any name resolution process that involves other resource record types is currently unsupported, although I wish to add complete handling of all resource record types in the future.
 
-DNS Shark has been developed with MyPy and, thus, it strives to provide complete static type annotation for all the code.
+DNS Shark has been developed with MyPy and, thus, it strives to provide complete static type annotations for all the code.
 
 Continuous Integration with Travis CI. Code coverage tracking with Codecov.
 
