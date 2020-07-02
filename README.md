@@ -45,6 +45,8 @@ $ dns_shark 199.7.83.42 www.google.com
 
 Answers:
   www.google.com 300   A 172.217.3.196
+  
+(199.7.83.42 is a DNS server).
 ```
 
 If you want to resolve the domain name to IPv6 addresses, instead of IPv4 addresses, then specify the `--ipv6 1` option.
