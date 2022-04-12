@@ -4,6 +4,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dns-shark)
 ![PyPI](https://img.shields.io/pypi/v/dns-shark)
 
+*This repo is not actively maintained.*
 
 DNS Shark is a domain name resolver.
 
